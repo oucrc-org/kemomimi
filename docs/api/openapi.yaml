@@ -3,7 +3,9 @@ info:
   title: KEMOMIMI API
   version: v0.2
   description: 備品管理システムのREST API仕様書です。
-
+servers:
+  - url: http://localhost:3000
+    description: Development server
 # TODO operationIdの付与
 
 tags:

@@ -23,6 +23,7 @@ public_items:
           enum:
             - is_remaining
             - category_id
+            - user_id
         required: false
       - in: query
         name: search
@@ -68,7 +69,7 @@ public_items-{public_item_id}:
     summary: 備品情報取得
     parameters:
       - in: path
-        name: public_item_id
+        name: public-item-id
         schema:
           type: string
         required: true
@@ -88,7 +89,7 @@ public_items-{public_item_id}:
     summary: 備品情報更新
     parameters:
       - in: path
-        name: public_item_id
+        name: public-item-id
         schema:
           type: string
         required: true
@@ -116,7 +117,7 @@ public_items-{public_item_id}:
     summary: 備品削除
     parameters:
       - in: path
-        name: public_item_id
+        name: public-item-id
         schema:
           type: string
         required: true
