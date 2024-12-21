@@ -6,7 +6,7 @@ properties:
   name:
     type: string
     description: 備品名
-  categories:
+  category:
     type: object
     $ref: "./category.yaml"
     description: カテゴリ(1つ)
@@ -24,7 +24,7 @@ properties:
   is_remaining:
     type: boolean
     description: 現存しているか
-  main_users:
+  main_user:
     type: object
     $ref: "./user.yaml"
     description: 主要な利用者(1人)
@@ -33,3 +33,5 @@ properties:
     description: 備考欄
 required:
   - public_item_id
+  - name
+  - is_remaining

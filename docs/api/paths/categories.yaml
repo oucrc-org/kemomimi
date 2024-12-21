@@ -39,7 +39,7 @@ categories-{category_id}:
     summary: カテゴリ情報取得
     parameters:
       - in: path
-        name: category_id
+        name: category-id
         schema:
           type: string
         required: true
@@ -59,7 +59,7 @@ categories-{category_id}:
     summary: カテゴリ情報更新
     parameters:
       - in: path
-        name: category_id
+        name: category-id
         schema:
           type: string
         required: true
@@ -87,7 +87,7 @@ categories-{category_id}:
     summary: カテゴリ削除
     parameters:
       - in: path
-        name: category_id
+        name: category-id
         schema:
           type: string
         required: true

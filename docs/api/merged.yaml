@@ -1,0 +1,757 @@
+openapi: 3.0.3
+info:
+  title: KEMOMIMI API
+  version: v0.2
+  description: 備品管理システムのREST API仕様書です。
+servers:
+  - url: 'http://localhost:3000'
+    description: Development server
+tags:
+  - name: PublicItems
+    description: 備品
+  - name: PublicItems-MainUser
+    description: 備品ユーザー
+  - name: PrivateItems
+    description: 私物
+  - name: PostGradTreat
+    description: 卒業後の私物の処理
+  - name: Products
+    description: 製品
+  - name: Categories
+    description: 分類
+  - name: Products-Categories
+    description: 製品分類
+  - name: PurchaseRequests
+    description: 購入申請
+  - name: PurchaseRequestsStatus
+    description: 購入申請状態
+  - name: Users
+    description: 部員
+  - name: Auth
+    description: 認証
+paths:
+  /public-items:
+    get:
+      tags:
+        - PublicItems
+      summary: 備品一覧取得
+      parameters:
+        - in: query
+          name: sort
+          description: ソート対象のフィールド名
+          schema:
+            type: string
+            enum:
+              - public_item_id
+              - cost
+              - approval_date
+              - expiration_date
+          required: false
+        - in: query
+          name: filter
+          description: フィルター対象のフィールド名
+          schema:
+            type: string
+            enum:
+              - is_remaining
+              - category_id
+              - user_id
+          required: false
+        - in: query
+          name: search
+          description: 検索対象のフィールド名
+          schema:
+            type: string
+            enum:
+              - public_item_name
+          required: false
+      responses:
+        '200':
+          description: 備品一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PublicItem'
+    post:
+      tags:
+        - PublicItems
+      summary: 備品新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicItemEntry'
+      responses:
+        '201':
+          description: 備品登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemDetails'
+        '400':
+          description: 必須項目の入力漏れなど
+  '/public-items/{public-item-id}':
+    get:
+      tags:
+        - PublicItems
+      summary: 備品情報取得
+      parameters:
+        - in: path
+          name: public-item-id
+          schema:
+            type: string
+          required: true
+          description: 備品のID
+      responses:
+        '200':
+          description: 備品情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemDetails'
+        '404':
+          description: 備品が見つかりません
+    put:
+      tags:
+        - PublicItems
+      summary: 備品情報更新
+      parameters:
+        - in: path
+          name: public-item-id
+          schema:
+            type: string
+          required: true
+          description: 備品のID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicItemDetails'
+      responses:
+        '200':
+          description: 備品情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemDetails'
+        '400':
+          description: 必須項目の入力漏れなど
+        '404':
+          description: 備品が見つかりません
+    delete:
+      tags:
+        - PublicItems
+      summary: 備品削除
+      parameters:
+        - in: path
+          name: public-item-id
+          schema:
+            type: string
+          required: true
+          description: 備品のID
+      responses:
+        '204':
+          description: 備品削除成功
+        '404':
+          description: 備品が見つかりません
+  /private-items:
+    get:
+      tags:
+        - PrivateItems
+      summary: 私物一覧取得
+      responses:
+        '200':
+          description: 私物一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PrivateItem'
+    post:
+      tags:
+        - PrivateItems
+      summary: 私物新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateItem'
+      responses:
+        '201':
+          description: 私物登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateItem'
+        '400':
+          description: 必須項目の入力漏れなど
+  '/private-items/{private-item-id}':
+    get:
+      tags:
+        - PrivateItems
+      summary: 私物情報取得
+      parameters:
+        - in: path
+          name: private-item-id
+          schema:
+            type: string
+          required: true
+          description: 私物のID
+      responses:
+        '200':
+          description: 私物情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateItem'
+        '404':
+          description: 私物が見つかりません
+    put:
+      tags:
+        - PrivateItems
+      summary: 私物情報更新
+      parameters:
+        - in: path
+          name: private-item-id
+          schema:
+            type: string
+          required: true
+          description: 私物のID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrivateItem'
+      responses:
+        '200':
+          description: 私物情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateItem'
+        '400':
+          description: 必須項目の入力漏れなど
+        '404':
+          description: 私物が見つかりません
+    delete:
+      tags:
+        - PrivateItems
+      summary: 私物削除
+      parameters:
+        - in: path
+          name: private-item-id
+          schema:
+            type: string
+          required: true
+          description: 私物のID
+      responses:
+        '204':
+          description: 私物削除成功
+        '404':
+          description: 私物が見つかりません
+  /products:
+    get:
+      tags:
+        - products
+      summary: 製品一覧取得
+      responses:
+        '200':
+          description: 製品一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags:
+        - products
+      summary: 製品新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: 製品登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 必須項目の入力漏れなど
+  '/products/{product-id}':
+    get:
+      tags:
+        - products
+      summary: 製品情報取得
+      parameters:
+        - in: path
+          name: product-id
+          schema:
+            type: string
+          required: true
+          description: 製品のID
+      responses:
+        '200':
+          description: 製品情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 製品が見つかりません
+    put:
+      tags:
+        - products
+      summary: 製品情報更新
+      parameters:
+        - in: path
+          name: product-id
+          schema:
+            type: string
+          required: true
+          description: 製品のID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: 製品情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 必須項目の入力漏れなど
+        '404':
+          description: 製品が見つかりません
+    delete:
+      tags:
+        - products
+      summary: 製品削除
+      parameters:
+        - in: path
+          name: product-id
+          schema:
+            type: string
+          required: true
+          description: 製品のID
+      responses:
+        '204':
+          description: 製品削除成功
+        '404':
+          description: 製品が見つかりません
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: カテゴリ一覧取得
+      responses:
+        '200':
+          description: カテゴリ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+    post:
+      tags:
+        - Categories
+      summary: カテゴリ新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: カテゴリ登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: 必須項目の入力漏れなど
+  '/categories/{category-id}':
+    get:
+      tags:
+        - Categories
+      summary: カテゴリ情報取得
+      parameters:
+        - in: path
+          name: category-id
+          schema:
+            type: string
+          required: true
+          description: カテゴリのID
+      responses:
+        '200':
+          description: カテゴリ情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '404':
+          description: カテゴリが見つかりません
+    put:
+      tags:
+        - Categories
+      summary: カテゴリ情報更新
+      parameters:
+        - in: path
+          name: category-id
+          schema:
+            type: string
+          required: true
+          description: カテゴリのID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          description: カテゴリ情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: 必須項目の入力漏れなど
+        '404':
+          description: カテゴリが見つかりません
+    delete:
+      tags:
+        - Categories
+      summary: カテゴリ削除
+      parameters:
+        - in: path
+          name: category-id
+          schema:
+            type: string
+          required: true
+          description: カテゴリのID
+      responses:
+        '204':
+          description: カテゴリ削除成功
+        '404':
+          description: カテゴリが見つかりません
+  /users:
+    get:
+      tags:
+        - Users
+      summary: 部員一覧取得
+      responses:
+        '200':
+          description: 部員一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - Users
+      summary: 部員新規登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: 部員登録成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 必須項目の入力漏れなど
+  '/users-{user_id}':
+    get:
+      tags:
+        - Users
+      summary: 部員情報取得
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: string
+          required: true
+          description: 部員のID
+      responses:
+        '200':
+          description: 部員情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: 部員が見つかりません
+    put:
+      tags:
+        - Users
+      summary: 部員情報更新
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: string
+          required: true
+          description: 部員のID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: 部員情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: 必須項目の入力漏れなど
+        '404':
+          description: 部員が見つかりません
+    delete:
+      tags:
+        - Users
+      summary: 部員削除
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: string
+          required: true
+          description: 部員のID
+      responses:
+        '204':
+          description: 部員削除成功
+        '404':
+          description: 部員が見つかりません
+components:
+  schemas:
+    PublicItemDetails:
+      type: object
+      properties:
+        public_item_id:
+          type: string
+          description: 備品のユニークID
+        name:
+          type: string
+          description: 備品名
+        product:
+          $ref: '#/components/schemas/Product'
+          description: 製品
+        cost:
+          type: integer
+          description: 備品の購入コスト
+        purchase_date:
+          type: string
+          format: date
+          description: 導入日
+        expiration_date:
+          type: string
+          format: date
+          description: 耐用期限
+        is_remaining:
+          type: boolean
+          description: 現存しているか
+        purchase_request_id:
+          type: string
+          description: 追加元の購入申請ID
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - public_item_id
+    PublicItemEntry:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 備品名
+        cost:
+          type: integer
+          description: 備品の購入コスト(NULLなら申請から)
+        purchase_date:
+          type: string
+          format: date
+          description: 導入日(NULLなら現時刻)
+        expiration_date:
+          type: string
+          format: date
+          description: 耐用期限
+        is_remaining:
+          type: boolean
+          description: 現存しているか(NULLなら現存)
+        purchase_request_id:
+          type: string
+          description: 追加元の購入申請ID
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - name
+        - purchase_request_id
+    PublicItem:
+      type: object
+      properties:
+        public_item_id:
+          type: string
+          description: 備品のユニークID
+        name:
+          type: string
+          description: 備品名
+        category:
+          type: object
+          $ref: '#/components/schemas/Category'
+          description: カテゴリ(1つ)
+        cost:
+          type: integer
+          description: 備品の購入コスト
+        approval_date:
+          type: string
+          format: date
+          description: 承認日
+        expiration_date:
+          type: string
+          format: date
+          description: 耐用期限
+        is_remaining:
+          type: boolean
+          description: 現存しているか
+        main_user:
+          type: object
+          $ref: '#/components/schemas/User'
+          description: 主要な利用者(1人)
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - public_item_id
+        - name
+        - is_remaining
+    PrivateItem:
+      type: object
+      properties:
+        private_item_id:
+          type: string
+          description: 私物のユニークID
+        name:
+          type: string
+          description: 製品名
+        owner_id:
+          type: string
+          description: 所有者ID
+        post_grad_treat_id:
+          type: string
+          description: 卒業後の処理ID
+        model_number:
+          type: string
+          description: 型番
+        is_remaining:
+          type: boolean
+          description: 現存しているか
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - private_item_id
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: 製品のユニークID
+        name:
+          type: string
+          description: 製品名
+        model_number:
+          type: string
+          description: 型番
+        product_url:
+          type: string
+          description: 商品のURL
+        categiries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        main_users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - product_id
+        - name
+    Category:
+      type: object
+      properties:
+        category_id:
+          type: string
+          description: カテゴリのユニークID
+        name:
+          type: string
+          description: カテゴリ名
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - category_id
+        - name
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: ユーザーのユニークID
+        handle_name:
+          type: string
+          description: ユーザーのハンドルネーム
+        screen_name:
+          type: string
+          description: ユーザーのスクリーンネーム
+        slack_id:
+          type: string
+          description: ユーザーのSlack ID
+        is_admin:
+          type: boolean
+          description: 管理者フラグ
+        is_member:
+          type: boolean
+          description: 在籍状況
+        graduation_date:
+          type: string
+          format: date
+          description: 卒業日
+        remarks:
+          type: string
+          description: 備考欄
+      required:
+        - user_id
+        - handle_name
+        - screen_name
