@@ -18,4 +18,4 @@ mdドキュメントを生成する
 
 - openapi generatorで生成すると`Cargo.toml`のversionがおかしくなってエラーになるので注意
 - `#[async_trait]`をつけるとトレイとのメンバを自動でフィルしてくれなくなる
-- 
+- `main.rs`の関数は呼び出せない

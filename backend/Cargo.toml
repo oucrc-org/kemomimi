@@ -1,6 +1,3 @@
 [workspace]
 
-members = [
-    "kemomimi-api",
-    "openapi_gen",
-]
+members = ["kemomimi_api", "openapi_gen", "tests"]
