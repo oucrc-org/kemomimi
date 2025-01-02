@@ -1,0 +1,268 @@
+{
+    "public-items": [
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item1",
+        "name": "デスクトップPC①",
+        "category": {
+          "category_id": "1111",
+          "name": "PC",
+          "remarks": "パソコン"
+        },
+        "cost": 150000,
+        "approval_date": "2024-01-01",
+        "expiration_date": "2028-01-01",
+        "is_remaining": true,
+        "main_user": {
+          "user_id": "user1",
+          "handle_name": "KEMO",
+          "screen_name": "KEMOKEMO",
+          "slack_id": "11111111",
+          "is_admin": false,
+          "is_member": true,
+          "graduation_date": "2024-03-31",
+          "remarks": "ケモミミ美少女"
+        },
+        "remarks": "かわいい"
+      },
+      {
+        "public_item_id": "item2",
+        "name": "ケモミミ",
+        "category": {
+          "category_id": "2222",
+          "name": "その他",
+          "remarks": "かわいい"
+        },
+        "cost": 5000000,
+        "approval_date": "2024-04-01",
+        "expiration_date": "2025-04-01",
+        "is_remaining": false,
+        "main_user": {
+          "user_id": "user2",
+          "handle_name": "KEMO2",
+          "screen_name": "KEMOKEEEMO",
+          "slack_id": "22222222",
+          "is_admin": true,
+          "is_member": true,
+          "graduation_date": null,
+          "remarks": "部長"
+        },
+        "remarks": "生もの"
+      }
+    ]
+}  

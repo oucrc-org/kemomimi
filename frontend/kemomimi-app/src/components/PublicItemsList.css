@@ -1,0 +1,46 @@
+/* コンテナ */
+.public-items-list {
+    padding: 20px;
+}
+  
+/* ヘッダー */
+.public-items-list h2 {
+    margin-bottom: 20px;
+}
+
+/* 検索コンテナ */
+.search-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* 検索欄 */
+.search-input {
+    width: 500px;
+    padding: 9px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* リスト */
+.public-items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* リストヘッダー */
+.public-items-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    background-color: #f2f2f2;
+    text-align: center;
+}
+  
+/* セル */
+.public-items-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}  
