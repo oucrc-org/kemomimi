@@ -125,7 +125,32 @@ impl PublicItems for ApiImpl {
     where
         'life0: 'async_trait,
     {
-        todo!()
+        let public_item_id = Uuid::now_v7();
+
+        let public_item_id = query_as!(
+            Uuid,
+            r#"
+            INSERT INTO public_item (
+                public_item_id,
+                name,
+                cost,
+                purchase_date,
+                expiration_date,
+                is_remaining,
+                remarks
+            )
+            VALUES (
+                $1,
+                $2,
+                $3,
+                $4,
+                $5,
+                $6,
+                $7
+            )
+            RETURNING public_item_id;
+            "#
+        );
     }
 
     #[doc = " 備品削除."]
