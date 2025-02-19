@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Product } from '../../../utils/api';
+import { Product } from '../../../utils/types';
+import { fetchProducts } from '../../../utils/api';
 
 interface PublicItemEntry {
   name: string;
@@ -24,9 +25,10 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
   const [isRemaining, setIsRemaining] = useState(true);
   const [remarks, setRemarks] = useState('');
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | 'new' | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
 
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key in keyof PublicItemEntry]?: string }>({});
 
   const firstInputRef = React.useRef<HTMLInputElement>(null);
@@ -39,8 +41,19 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
 
   useEffect(() => {
     if (isOpen) {
-      // フォームが開いた際に製品一覧を取得する
-      fetchProducts();
+      const loadProducts = async () => {
+        try {
+          setLoading(true);
+          const data = await fetchProducts();
+          console.log('Fetched products:', data); // デバッグログ
+          setProducts(data);
+        } catch (err) {
+          console.error('Error loading products:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadProducts();
     }
   }, [isOpen]);
 
@@ -62,24 +75,16 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
     return newErrors;
   };
 
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch('/products');
-      if (response.ok) {
-        const data = await response.json();
-        setProducts(data);
-      } else {
-        console.error('製品一覧の取得に失敗しました。', response.status);
-      }
-    } catch (error) {
-      console.error('製品一覧取得エラー:', error);
-    }
-  };
-
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const productId = e.target.value;
-    const product = products.find(prod => prod.product_id === productId);
-    setSelectedProduct(product || null);
+    const value = e.target.value;
+    if (value === 'new') {
+      setSelectedProduct('new');
+    } else if (value === '') {
+      setSelectedProduct(null);
+    } else {
+      const product = products.find(prod => prod.product_id === value);
+      setSelectedProduct(product || null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -175,27 +180,131 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
             )}
           </div>
           {/* Product */}
-          <label htmlFor="product-select">製品を選択：</label>
-          <select id="product-select" onChange={handleSelect} defaultValue="">
-            <option value="">-- 製品を選択 --</option>
-            {products.map((product) => (
-              <option key={product.product_id} value={product.product_id}>
-                {product.name}
-              </option>
-            ))}
-          </select>
+          <div className="mb-4">
+            <label
+              htmlFor="product"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+            製品選択 <span className="text-red-500">*</span>
+            </label>
+            <select 
+              id="product-select"
+              onChange={handleSelect}
+              defaultValue=""
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">製品を選択</option>
+              <option value="new">新規製品登録</option>
+              {products.map((product) => (
+                <option key={product.product_id} value={product.product_id}>
+                  {product.name}
+                </option>
+              ))}
+            </select>
+          </div>
           {/* Product detail */}
-          {selectedProduct && (
-            <div style={{ marginTop: '1rem' }}>
-              <h3>選択された製品の詳細</h3>
-              <p><strong>ID:</strong> {selectedProduct.product_id}</p>
-              <p><strong>名称:</strong> {selectedProduct.name}</p>
-              {selectedProduct.categiries && (
-                <>
-                  <p><strong>カテゴリ名:</strong> {selectedProduct.categiries[0].name}</p>
-                  <p><strong>備考:</strong> {selectedProduct.categiries[0].remarks}</p>
-                </>
-              )}
+          {selectedProduct === 'new' ? (
+            <div className="mt-6 bg-gray-50 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">新規製品登録</h3>
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="productName" className="block text-sm font-medium text-gray-700">
+                    製品名 <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="productName"
+                    type="text"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="modelNumber" className="block text-sm font-medium text-gray-700">
+                    型番
+                  </label>
+                  <input
+                    id="modelNumber"
+                    type="text"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                    カテゴリ <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="category"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">カテゴリを選択</option>
+                    {/* カテゴリの選択肢をここに追加 */}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                    メインユーザー <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    id="category"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">メインユーザーを選択</option>
+                    {/* メインユーザーの選択肢をここに追加 */}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="productRemarks" className="block text-sm font-medium text-gray-700">
+                    備考
+                  </label>
+                  <textarea
+                    id="productRemarks"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : selectedProduct && (
+            <div className="mt-6 bg-gray-50 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">製品情報</h3>
+              <div className="space-y-3">
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">ID</p>
+                    <p className="mt-1 text-sm text-gray-900">{selectedProduct.product_id}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">製品名</p>
+                    <p className="mt-1 text-sm text-gray-900">{selectedProduct.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">型番</p>
+                    <p className="mt-1 text-sm text-gray-900">{selectedProduct.model_number || '---'}</p>
+                  </div>
+                </div>
+                {selectedProduct.main_users && (
+                  <div className="mt-4 border-t pt-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">メインユーザー</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedProduct.main_users[0].handle_name}</p>
+                    </div>
+                  </div>
+                )}
+                {selectedProduct.categiries && (
+                  <div className="mt-4 border-t pt-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">カテゴリ名</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedProduct.categiries[0].name}</p>
+                    </div>
+                  </div>
+                )}
+                {selectedProduct.remarks && (
+                  <div className="mt-4 border-t pt-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">備考</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedProduct.remarks || "---"}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
           {/* Cost */}
