@@ -1,3 +1,4 @@
+// 検索バーのコンポーネント
 import React, { useState } from 'react';
 
 interface SearchBarProps {
@@ -24,7 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Search"
+        placeholder="検索"
         className="border p-2 rounded w-80"
       />
     </div>
