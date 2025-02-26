@@ -17,7 +17,7 @@ export interface Product {
 
   model_number?: string;  // 型番
   product_url?: string;   // 商品のURL
-  categiries?: Category[];  // カテゴリ配列
+  categories?: Category[];  // カテゴリ配列
   main_users?: User[];    // メインユーザー配列
   remarks?: string;      // 備考欄
 }

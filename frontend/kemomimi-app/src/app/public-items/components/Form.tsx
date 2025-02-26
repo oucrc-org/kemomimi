@@ -288,11 +288,11 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
                     </div>
                   </div>
                 )}
-                {selectedProduct.categiries && (
+                {selectedProduct.categories && (
                   <div className="mt-4 border-t pt-4">
                     <div>
                       <p className="text-sm font-medium text-gray-600">カテゴリ名</p>
-                      <p className="mt-1 text-sm text-gray-900">{selectedProduct.categiries[0].name}</p>
+                      <p className="mt-1 text-sm text-gray-900">{selectedProduct.categories[0].name}</p>
                     </div>
                   </div>
                 )}
