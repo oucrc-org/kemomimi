@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Product } from '../../../utils/types';
+import { Product, PublicItemEntry } from '../../../utils/types';
 import { fetchProducts } from '../../../utils/api';
-
-interface PublicItemEntry {
-  name: string;
-  cost?: number;
-  purchase_date?: string;
-  expiration_date?: string;
-  is_remaining: boolean;
-  remarks?: string;
-}
 
 interface ItemFormProps {
   isOpen: boolean;
@@ -68,7 +59,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
 
   const validate = (): { [key in keyof PublicItemEntry]?: string } => {
     const newErrors: { [key in keyof PublicItemEntry]?: string } = {};
-    if (name !== '') {
+    if (name === '') {
       newErrors.name = '備品名は必須です。';
     }
     return newErrors;
@@ -96,10 +87,11 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
 
     const postData: PublicItemEntry = {
       name: name.trim(),
-      cost,
+      cost: cost,
       purchase_date: purchaseDate || undefined,
       expiration_date: expirationDate || undefined,
       is_remaining: isRemaining,
+      purchase_request_id: '0000',
       remarks: remarks.trim() || undefined,
     };
 
