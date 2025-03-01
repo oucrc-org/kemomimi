@@ -11,6 +11,16 @@ export interface PublicItem {
   remarks?: string;      // 備考欄
 }
 
+export interface PublicItemEntry {
+  name: string;
+  cost?: number;
+  purchase_date?: string;
+  expiration_date?: string;
+  is_remaining: boolean;
+  purchase_request_id: string;
+  remarks?: string;
+}
+
 export interface Product {
   product_id: string;    // 製品のユニークID 
   name: string;         // 製品名
@@ -20,6 +30,14 @@ export interface Product {
   categories?: Category[];  // カテゴリ配列
   main_users?: User[];    // メインユーザー配列
   remarks?: string;      // 備考欄
+}
+
+export interface ProductEntry {
+  name: string;
+  model_number?: string;
+  category_id?: string;
+  main_user_id?: string;
+  remarks?: string;
 }
 
 interface Category {

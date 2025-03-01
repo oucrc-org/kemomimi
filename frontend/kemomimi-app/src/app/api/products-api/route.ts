@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       name: body.name,
       model_number: body.model_number,
       product_url: body.product_url,
-      categiries: body.categiries || [],
+      categories: body.categiries || [],
       main_users: body.main_users || [],
       remarks: body.remarks
     };

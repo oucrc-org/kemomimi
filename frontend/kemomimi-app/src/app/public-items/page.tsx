@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { fetchPublicItems, PublicItem } from '../../utils/api';
+import { fetchPublicItems } from '../../utils/api';
+import type { PublicItem, Product } from '../../utils/types';
 import ItemTable from './components/ItemList';
 import SearchBar from './components/SearchBar';
 import AddButton from './components/AddButton';
