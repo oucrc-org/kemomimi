@@ -40,22 +40,21 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      const loadProducts = async () => {
-        try {
-          setLoading(true);
-          const data = await fetchProducts();
-          console.log('Fetched products:', data); // デバッグログ
-          setProducts(data);
-        } catch (err) {
-          console.error('Error loading products:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      loadProducts();
-    }
-  }, [isOpen]);
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchProducts();
+        console.log('Fetched products:', data); // デバッグログ
+        setProducts(data);
+      } catch (err) {
+        console.error('Error loading products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadProducts();
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -69,7 +68,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
 
   const validate = (): { [key in keyof PublicItemEntry]?: string } => {
     const newErrors: { [key in keyof PublicItemEntry]?: string } = {};
-    if (!name.trim()) {
+    if (name !== '') {
       newErrors.name = '備品名は必須です。';
     }
     return newErrors;
