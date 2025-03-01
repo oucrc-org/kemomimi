@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Product, PublicItemEntry } from '../../../utils/types';
-import { fetchProducts } from '../../../utils/api';
+import { fetchProducts, addPublicItem } from '../../../utils/api';
 
 interface ItemFormProps {
   isOpen: boolean;
@@ -96,21 +96,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
     };
 
     try {
-      const response = await fetch('/public-items', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (!response.ok) {
-        console.error('登録エラー:', response.status, await response.text());
-        alert(`登録に失敗しました (status: ${response.status})`);
-        return;
-      }
-
-      const data = await response.json();
+      const data = await addPublicItem(postData);
       console.log('登録成功:', data);
 
       // 登録後の処理
