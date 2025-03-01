@@ -14,7 +14,7 @@ interface FetchProductsParams {
 
 // 本番サーバーとモックの切り替え
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
-const USE_MOCK_API = process.env.NEXT_PUBLIC_MOCK_API === 'true';
+const USE_MOCK_API = process.env.NEXT_PUBLIC_MOCK_API !== undefined && process.env.NEXT_PUBLIC_MOCK_API !== "";
 
 // 備品一覧取得
 export const fetchPublicItems = async (params?: FetchPublicItemsParams): Promise<PublicItem[]> => {
