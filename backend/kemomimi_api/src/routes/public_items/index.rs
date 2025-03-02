@@ -91,7 +91,7 @@ impl PublicItems for ApiImpl {
         let data: Vec<PublicItem> = data
             .into_iter()
             .map(|item| PublicItem {
-                public_item_id: item.public_item_id.to_string(),
+                public_item_id: item.public_item_id,
                 name: item.name,
                 category: None, // TODO
                 cost: item.cost,
