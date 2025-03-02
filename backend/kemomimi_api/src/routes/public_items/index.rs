@@ -10,7 +10,6 @@ use openapi::{
     },
     models::{self, PublicItem},
 };
-use openapi::models::Product;
 use sqlx::{query_as, types::Uuid};
 use tracing::info;
 
@@ -159,14 +158,14 @@ impl PublicItems for ApiImpl {
                 is_remaining, 
                 remarks
             "#,
-            new_public_item_id,   // $1: 備品ID
-            body.name,            // $2: 備品名
-            body.product_id,      // $3: 製品ID（既存の製品を参照）
-            body.cost,            // $4: 購入コスト
-            body.purchase_date,   // $5: 導入日
-            body.expiration_date, // $6: 耐用期限
-            body.is_remaining,    // $7: 現存状態
-            body.remarks          // $8: 備考
+            new_public_item_id,                     // $1: 備品ID
+            body.name,                              // $2: 備品名
+            body.product_id,                        // $3: 製品ID（既存の製品を参照）
+            body.cost,                              // $4: 購入コスト
+            body.purchase_date.map(|d| d.into()),   // $5: 導入日
+            body.expiration_date.map(|d| d.into()), // $6: 耐用期限
+            body.is_remaining,                      // $7: 現存状態
+            body.remarks                            // $8: 備考
         )
         .fetch_one(&mut tx)
         .await
