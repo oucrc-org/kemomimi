@@ -10,6 +10,7 @@ use openapi::{
     },
     models::{self, PublicItem},
 };
+use openapi::models::Product;
 use sqlx::{query_as, types::Uuid};
 use tracing::info;
 
