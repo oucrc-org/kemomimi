@@ -10,6 +10,7 @@ use openapi::{
     },
     models::{self, PublicItem},
 };
+use openapi::models::Product;
 use sqlx::{query_as, types::Uuid};
 use tracing::info;
 
@@ -78,7 +79,7 @@ impl PublicItems for ApiImpl {
             LEFT JOIN
                 product p ON pi.product_id = p.product_id
             LEFT JOIN
-                 product_category pc ON p.product_id = pc.product_id
+                product_category pc ON p.product_id = pc.product_id
             LEFT JOIN
                 category c ON pc.category_id = c.category_id
             "#
@@ -90,7 +91,7 @@ impl PublicItems for ApiImpl {
         let data: Vec<PublicItem> = data
             .into_iter()
             .map(|item| PublicItem {
-                public_item_id: item.public_item_id.to_string(),
+                public_item_id: item.public_item_id,
                 name: item.name,
                 category: None, // TODO
                 cost: item.cost,
@@ -125,7 +126,110 @@ impl PublicItems for ApiImpl {
     where
         'life0: 'async_trait,
     {
-        todo!()
+        let new_public_item_id = Uuid::now_v7(); // 新規の備品IDを生成
+
+        // トランザクション開始
+        let mut tx = self.db_pool.begin().await.map_err(|e| {
+            tracing::error!("Failed to start transaction: {:?}", e);
+            ()
+        })?;
+
+        // 備品情報を挿入
+        let inserted_item = sqlx::query_as!(
+            PublicItemRaw,
+            r#"
+            INSERT INTO public_item (
+                public_item_id,
+                name,
+                product_id,
+                cost,
+                purchase_date,
+                expiration_date,
+                is_remaining,
+                remarks
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            RETURNING 
+                public_item_id, 
+                name, 
+                product_id, 
+                cost, 
+                purchase_date, 
+                expiration_date, 
+                is_remaining, 
+                remarks
+            "#,
+            new_public_item_id,                     // $1: 備品ID
+            body.name,                              // $2: 備品名
+            body.product_id,                        // $3: 製品ID（既存の製品を参照）
+            body.cost,                              // $4: 購入コスト
+            body.purchase_date.map(|d| d.into()),   // $5: 導入日
+            body.expiration_date.map(|d| d.into()), // $6: 耐用期限
+            body.is_remaining,                      // $7: 現存状態
+            body.remarks                            // $8: 備考
+        )
+        .fetch_one(&mut tx)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to insert public item: {:?}", e);
+            ()
+        })?;
+
+        // 製品情報を取得
+        let product = sqlx::query_as!(
+            Product,
+            r#"
+            SELECT 
+                product_id,
+                name,
+                model_number,
+                product_url,
+                remarks
+            FROM product
+            WHERE product_id = $1
+            "#,
+            body.product_id
+        )
+        .fetch_optional(&mut tx)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to fetch product: {:?}", e);
+            ()
+        })?
+        .ok_or_else(|| {
+            tracing::error!("Product not found: {:?}", body.product_id);
+            ()
+        })?;
+
+        // トランザクションのコミット
+        tx.commit().await.map_err(|e| {
+            tracing::error!("Failed to commit transaction: {:?}", e);
+            ()
+        })?;
+
+        // レスポンスデータを作成
+        let public_item_details = models::PublicItemDetails {
+            public_item_id: inserted_item.public_item_id.to_string(),
+            name: inserted_item.name,
+            product: Some(models::Product {
+                product_id: product.product_id.to_string(),
+                name: product.name,
+                model_number: product.model_number,
+                product_url: product.product_url,
+                categiries: Some(vec![]), // カテゴリ情報を空リストで設定
+                main_users: Some(vec![]), // main_users も空で設定
+                remarks: product.remarks,
+            }),
+            cost: inserted_item.cost,
+            purchase_date: inserted_item.purchase_date,
+            expiration_date: inserted_item.expiration_date,
+            is_remaining: inserted_item.is_remaining,
+            purchase_request_id: None, // 購入申請IDは未設定
+            remarks: inserted_item.remarks,
+        };
+
+        // 成功レスポンスを返却
+        Ok(PublicItemsPostResponse::Status201(public_item_details))
     }
 
     #[doc = " 備品削除."]

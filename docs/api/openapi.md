@@ -48,7 +48,7 @@ Base URLs:
 ```json
 [
   {
-    "public_item_id": "string",
+    "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
     "name": "string",
     "category": {
       "category_id": "string",
@@ -87,7 +87,7 @@ Status Code **200**
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |*anonymous*|[[PublicItem](#schemapublicitem)]|false|none|none|
-|» public_item_id|string|true|none|備品のユニークID|
+|» public_item_id|string(uuid)|true|none|備品のユニークID|
 |» name|string|true|none|備品名|
 |» category|[Category](#schemacategory)|false|none|none|
 |»» category_id|string|true|none|カテゴリのユニークID|
@@ -123,11 +123,12 @@ This operation does not require authentication
 ```json
 {
   "name": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "cost": 0,
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 ```
@@ -144,7 +145,7 @@ This operation does not require authentication
 
 ```json
 {
-  "public_item_id": "string",
+  "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
     "product_id": "string",
@@ -176,7 +177,7 @@ This operation does not require authentication
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 ```
@@ -210,7 +211,7 @@ This operation does not require authentication
 
 ```json
 {
-  "public_item_id": "string",
+  "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
     "product_id": "string",
@@ -242,7 +243,7 @@ This operation does not require authentication
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 ```
@@ -268,7 +269,7 @@ This operation does not require authentication
 
 ```json
 {
-  "public_item_id": "string",
+  "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
     "product_id": "string",
@@ -300,7 +301,7 @@ This operation does not require authentication
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 ```
@@ -318,7 +319,7 @@ This operation does not require authentication
 
 ```json
 {
-  "public_item_id": "string",
+  "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
     "product_id": "string",
@@ -350,7 +351,7 @@ This operation does not require authentication
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 ```
@@ -1383,7 +1384,7 @@ This operation does not require authentication
 
 ```json
 {
-  "public_item_id": "string",
+  "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
     "product_id": "string",
@@ -1415,7 +1416,7 @@ This operation does not require authentication
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 
@@ -1425,14 +1426,14 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|public_item_id|string|true|none|備品のユニークID|
+|public_item_id|string(uuid)|true|none|備品のユニークID|
 |name|string|false|none|備品名|
 |product|[Product](#schemaproduct)|false|none|製品|
 |cost|integer|false|none|備品の購入コスト|
 |purchase_date|string(date)|false|none|導入日|
 |expiration_date|string(date)|false|none|耐用期限|
 |is_remaining|boolean|false|none|現存しているか|
-|purchase_request_id|string|false|none|追加元の購入申請ID|
+|purchase_request_id|string(uuid)|false|none|追加元の購入申請ID|
 |remarks|string|false|none|備考欄|
 
 <h2 id="tocS_PublicItemEntry">PublicItemEntry</h2>
@@ -1445,11 +1446,12 @@ This operation does not require authentication
 ```json
 {
   "name": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "cost": 0,
   "purchase_date": "2019-08-24",
   "expiration_date": "2019-08-24",
   "is_remaining": true,
-  "purchase_request_id": "string",
+  "purchase_request_id": "8e580309-5ba2-4bf0-8514-fa3f50b5d78f",
   "remarks": "string"
 }
 
@@ -1460,11 +1462,12 @@ This operation does not require authentication
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |name|string|true|none|備品名|
+|product_id|string(uuid)|true|none|製品ID|
 |cost|integer|false|none|備品の購入コスト(NULLなら申請から)|
 |purchase_date|string(date)|false|none|導入日(NULLなら現時刻)|
 |expiration_date|string(date)|false|none|耐用期限|
 |is_remaining|boolean|false|none|現存しているか(NULLなら現存)|
-|purchase_request_id|string|true|none|追加元の購入申請ID|
+|purchase_request_id|string(uuid)|false|none|追加元の購入申請ID|
 |remarks|string|false|none|備考欄|
 
 <h2 id="tocS_PublicItem">PublicItem</h2>
@@ -1476,7 +1479,7 @@ This operation does not require authentication
 
 ```json
 {
-  "public_item_id": "string",
+  "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "category": {
     "category_id": "string",
@@ -1506,7 +1509,7 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|public_item_id|string|true|none|備品のユニークID|
+|public_item_id|string(uuid)|true|none|備品のユニークID|
 |name|string|true|none|備品名|
 |category|[Category](#schemacategory)|false|none|カテゴリ(1つ)|
 |cost|integer|false|none|備品の購入コスト|

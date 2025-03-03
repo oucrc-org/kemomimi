@@ -557,6 +557,7 @@ components:
       properties:
         public_item_id:
           type: string
+          format: uuid
           description: 備品のユニークID
         name:
           type: string
@@ -580,6 +581,7 @@ components:
           description: 現存しているか
         purchase_request_id:
           type: string
+          format: uuid
           description: 追加元の購入申請ID
         remarks:
           type: string
@@ -592,6 +594,10 @@ components:
         name:
           type: string
           description: 備品名
+        product_id:
+          type: string
+          format: uuid
+          description: 製品ID
         cost:
           type: integer
           description: 備品の購入コスト(NULLなら申請から)
@@ -608,18 +614,20 @@ components:
           description: 現存しているか(NULLなら現存)
         purchase_request_id:
           type: string
+          format: uuid
           description: 追加元の購入申請ID
         remarks:
           type: string
           description: 備考欄
       required:
         - name
-        - purchase_request_id
+        - product_id
     PublicItem:
       type: object
       properties:
         public_item_id:
           type: string
+          format: uuid
           description: 備品のユニークID
         name:
           type: string
