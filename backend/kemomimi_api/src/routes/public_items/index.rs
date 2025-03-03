@@ -2,6 +2,7 @@ use crate::libs::ApiImpl;
 use axum::{async_trait, extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use chrono::Utc;
+use openapi::models::Product;
 use openapi::{
     apis::public_items::{
         PublicItems, PublicItemsGetResponse, PublicItemsPostResponse,
@@ -10,7 +11,6 @@ use openapi::{
     },
     models::{self, PublicItem},
 };
-use openapi::models::Product;
 use sqlx::{query_as, types::Uuid};
 use tracing::info;
 
@@ -21,11 +21,18 @@ struct PublicItemRaw {
 
     /// 備品名
     pub name: String,
+
+    /// カテゴリID（未実装のため Option<String>）
     pub category_id: Option<String>,
 
     /// 備品の購入コスト
     pub cost: Option<i32>,
 
+    /// 製品ID
+    pub product_id: Option<Uuid>, // 製品IDを格納するためのフィールド
+
+    /// 購入日
+    pub purchase_date: Option<sqlx::types::time::Date>,
     /// 承認日
     pub approval_date: Option<sqlx::types::time::Date>,
 
