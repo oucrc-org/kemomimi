@@ -77,7 +77,7 @@ impl PublicItems for ApiImpl {
                 pi.name as "name!",
                 c.category_id as "category_id?",
                 pi.cost as "cost?",
-                pi.purchase_date as "approval_date?",
+                pi.purchase_date as "purchase_date?",
                 pi.expiration_date as "expiration_date?",
                 pi.is_remaining as "is_remaining!",
                 pi.remarks as "remarks?"
