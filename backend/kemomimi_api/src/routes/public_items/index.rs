@@ -22,17 +22,18 @@ struct PublicItemRaw {
     /// 備品名
     pub name: String,
 
-    /// カテゴリID（未実装のため Option<String>）
+    /// カテゴリID
     pub category_id: Option<String>,
 
     /// 備品の購入コスト
     pub cost: Option<i32>,
 
     /// 製品ID
-    pub product_id: Option<Uuid>, // 製品IDを格納するためのフィールド
+    pub product_id: Option<Uuid>,
 
     /// 購入日
     pub purchase_date: Option<sqlx::types::time::Date>,
+
     /// 承認日
     pub approval_date: Option<sqlx::types::time::Date>,
 
