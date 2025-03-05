@@ -2,6 +2,7 @@ type: object
 properties:
   public_item_id:
     type: string
+    format: uuid
     description: 備品のユニークID
   name:
     type: string
@@ -25,6 +26,7 @@ properties:
     description: 現存しているか
   purchase_request_id:
     type: string
+    format: uuid
     description: 追加元の購入申請ID
   remarks:
     type: string
