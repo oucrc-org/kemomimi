@@ -29,7 +29,7 @@ struct PublicItemRaw {
     pub cost: Option<i32>,
 
     /// 製品ID
-    pub product_id: Option<Uuid>,
+    pub product_id: Uuid,
 
     /// 購入日
     pub purchase_date: Option<sqlx::types::time::Date>,
