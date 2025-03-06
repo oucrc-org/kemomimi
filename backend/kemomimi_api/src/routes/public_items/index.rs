@@ -35,7 +35,7 @@ struct PublicItemRaw {
     pub purchase_date: Option<sqlx::types::time::Date>,
 
     /// 承認日
-    pub approval_date: Option<sqlx::types::time::Date>,
+    // pub approval_date: Option<sqlx::types::time::Date>,
 
     /// 耐用期限
     pub expiration_date: Option<sqlx::types::time::Date>,
