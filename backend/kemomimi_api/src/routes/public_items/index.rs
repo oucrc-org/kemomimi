@@ -76,6 +76,7 @@ impl PublicItems for ApiImpl {
             SELECT
                 pi.public_item_id as "public_item_id!",
                 pi.name as "name!",
+                pi.product_id as "product_id!",
                 c.category_id as "category_id?",
                 pi.cost as "cost?",
                 pi.purchase_date as "purchase_date?",
