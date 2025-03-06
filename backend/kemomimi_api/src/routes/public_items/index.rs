@@ -163,8 +163,8 @@ impl PublicItems for ApiImpl {
                 name, 
                 product_id, 
                 cost, 
-                purchase_date, 
-                expiration_date, 
+                purchase_date as "purchase_date?",
+                expiration_date as "expiration_date?",
                 is_remaining, 
                 remarks
             "#,
