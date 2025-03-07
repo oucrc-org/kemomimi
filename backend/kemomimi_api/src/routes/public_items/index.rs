@@ -32,7 +32,7 @@ struct PublicItemRaw {
     pub product_id: Uuid,
 
     /// 購入日
-    pub purchase_date: Option<sqlx::types::time::Date>,
+    pub purchase_date: sqlx::types::time::Date,
 
     /// 承認日
     // pub approval_date: Option<sqlx::types::time::Date>,
@@ -79,7 +79,7 @@ impl PublicItems for ApiImpl {
                 pi.product_id as "product_id!",
                 c.category_id as "category_id?",
                 pi.cost as "cost?",
-                pi.purchase_date as "purchase_date?",
+                pi.purchase_date as "purchase_date!",
                 pi.expiration_date as "expiration_date?",
                 pi.is_remaining as "is_remaining!",
                 pi.remarks as "remarks?"
@@ -163,7 +163,7 @@ impl PublicItems for ApiImpl {
                 name, 
                 product_id, 
                 cost, 
-                purchase_date as "purchase_date?",
+                purchase_date,
                 expiration_date as "expiration_date?",
                 is_remaining, 
                 remarks
