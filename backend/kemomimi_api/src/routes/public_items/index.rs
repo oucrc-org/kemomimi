@@ -218,7 +218,7 @@ impl PublicItems for ApiImpl {
 
         // レスポンスデータを作成
         let public_item_details = models::PublicItemDetails {
-            public_item_id: inserted_item.public_item_id.to_string(),
+            public_item_id: inserted_item.public_item_id,
             name: inserted_item.name,
             product: Some(models::Product {
                 product_id: product.product_id.to_string(),
