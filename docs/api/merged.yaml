@@ -588,6 +588,10 @@ components:
           description: 備考欄
       required:
         - public_item_id
+        - name
+        - product
+        - purchase_date
+        - is_remaining
     PublicItemEntry:
       type: object
       properties:
