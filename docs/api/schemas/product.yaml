@@ -2,6 +2,7 @@ type: object
 properties:
   product_id:
     type: string
+    format: uuid
     description: 製品のユニークID
   name:
     type: string
