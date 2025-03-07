@@ -1003,12 +1003,10 @@ pub struct PublicItemDetails {
 
 /// 備品名
     #[serde(rename = "name")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub name: Option<String>,
+    pub name: String,
 
     #[serde(rename = "product")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub product: Option<models::Product>,
+    pub product: models::Product,
 
 /// 備品の購入コスト
     #[serde(rename = "cost")]
@@ -1017,8 +1015,7 @@ pub struct PublicItemDetails {
 
 /// 導入日
     #[serde(rename = "purchase_date")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub purchase_date: Option<chrono::naive::NaiveDate>,
+    pub purchase_date: chrono::naive::NaiveDate,
 
 /// 耐用期限
     #[serde(rename = "expiration_date")]
@@ -1027,8 +1024,7 @@ pub struct PublicItemDetails {
 
 /// 現存しているか
     #[serde(rename = "is_remaining")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub is_remaining: Option<bool>,
+    pub is_remaining: bool,
 
 /// 追加元の購入申請ID
     #[serde(rename = "purchase_request_id")]
@@ -1045,15 +1041,15 @@ pub struct PublicItemDetails {
 
 impl PublicItemDetails {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(public_item_id: uuid::Uuid, ) -> PublicItemDetails {
+    pub fn new(public_item_id: uuid::Uuid, name: String, product: models::Product, purchase_date: chrono::naive::NaiveDate, is_remaining: bool, ) -> PublicItemDetails {
         PublicItemDetails {
             public_item_id,
-            name: None,
-            product: None,
+            name,
+            product,
             cost: None,
-            purchase_date: None,
+            purchase_date,
             expiration_date: None,
-            is_remaining: None,
+            is_remaining,
             purchase_request_id: None,
             remarks: None,
         }
@@ -1069,12 +1065,8 @@ impl std::fmt::Display for PublicItemDetails {
             // Skipping public_item_id in query parameter serialization
 
 
-            self.name.as_ref().map(|name| {
-                [
-                    "name".to_string(),
-                    name.to_string(),
-                ].join(",")
-            }),
+            Some("name".to_string()),
+            Some(self.name.to_string()),
 
             // Skipping product in query parameter serialization
 
@@ -1091,12 +1083,8 @@ impl std::fmt::Display for PublicItemDetails {
             // Skipping expiration_date in query parameter serialization
 
 
-            self.is_remaining.as_ref().map(|is_remaining| {
-                [
-                    "is_remaining".to_string(),
-                    is_remaining.to_string(),
-                ].join(",")
-            }),
+            Some("is_remaining".to_string()),
+            Some(self.is_remaining.to_string()),
 
             // Skipping purchase_request_id in query parameter serialization
 
@@ -1180,12 +1168,12 @@ impl std::str::FromStr for PublicItemDetails {
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(PublicItemDetails {
             public_item_id: intermediate_rep.public_item_id.into_iter().next().ok_or_else(|| "public_item_id missing in PublicItemDetails".to_string())?,
-            name: intermediate_rep.name.into_iter().next(),
-            product: intermediate_rep.product.into_iter().next(),
+            name: intermediate_rep.name.into_iter().next().ok_or_else(|| "name missing in PublicItemDetails".to_string())?,
+            product: intermediate_rep.product.into_iter().next().ok_or_else(|| "product missing in PublicItemDetails".to_string())?,
             cost: intermediate_rep.cost.into_iter().next(),
-            purchase_date: intermediate_rep.purchase_date.into_iter().next(),
+            purchase_date: intermediate_rep.purchase_date.into_iter().next().ok_or_else(|| "purchase_date missing in PublicItemDetails".to_string())?,
             expiration_date: intermediate_rep.expiration_date.into_iter().next(),
-            is_remaining: intermediate_rep.is_remaining.into_iter().next(),
+            is_remaining: intermediate_rep.is_remaining.into_iter().next().ok_or_else(|| "is_remaining missing in PublicItemDetails".to_string())?,
             purchase_request_id: intermediate_rep.purchase_request_id.into_iter().next(),
             remarks: intermediate_rep.remarks.into_iter().next(),
         })
