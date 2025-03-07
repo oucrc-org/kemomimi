@@ -35,7 +35,7 @@ struct PublicItemRaw {
     pub purchase_date: chrono::naive::NaiveDate,
 
     /// 承認日
-    // pub approval_date: Option<sqlx::types::time::Date>,
+    // pub approval_date: Option<chrono::naive::NaiveDate>,
 
     /// 耐用期限
     pub expiration_date: Option<chrono::naive::NaiveDate>,
