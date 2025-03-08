@@ -562,7 +562,7 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<PrivateItem>
 pub struct Product {
 /// 製品のユニークID
     #[serde(rename = "product_id")]
-    pub product_id: String,
+    pub product_id: uuid::Uuid,
 
 /// 製品名
     #[serde(rename = "name")]
@@ -596,7 +596,7 @@ pub struct Product {
 
 impl Product {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(product_id: String, name: String, ) -> Product {
+    pub fn new(product_id: uuid::Uuid, name: String, ) -> Product {
         Product {
             product_id,
             name,
@@ -615,9 +615,7 @@ impl Product {
 impl std::fmt::Display for Product {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let params: Vec<Option<String>> = vec![
-
-            Some("product_id".to_string()),
-            Some(self.product_id.to_string()),
+            // Skipping product_id in query parameter serialization
 
 
             Some("name".to_string()),
@@ -668,7 +666,7 @@ impl std::str::FromStr for Product {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub product_id: Vec<String>,
+            pub product_id: Vec<uuid::Uuid>,
             pub name: Vec<String>,
             pub model_number: Vec<String>,
             pub product_url: Vec<String>,
@@ -693,7 +691,7 @@ impl std::str::FromStr for Product {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "product_id" => intermediate_rep.product_id.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "product_id" => intermediate_rep.product_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]

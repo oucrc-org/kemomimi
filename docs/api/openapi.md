@@ -148,7 +148,7 @@ This operation does not require authentication
   "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
-    "product_id": "string",
+    "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
     "name": "string",
     "model_number": "string",
     "product_url": "string",
@@ -214,7 +214,7 @@ This operation does not require authentication
   "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
-    "product_id": "string",
+    "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
     "name": "string",
     "model_number": "string",
     "product_url": "string",
@@ -272,7 +272,7 @@ This operation does not require authentication
   "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
-    "product_id": "string",
+    "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
     "name": "string",
     "model_number": "string",
     "product_url": "string",
@@ -322,7 +322,7 @@ This operation does not require authentication
   "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
-    "product_id": "string",
+    "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
     "name": "string",
     "model_number": "string",
     "product_url": "string",
@@ -1054,7 +1054,7 @@ This operation does not require authentication
 ```json
 [
   {
-    "product_id": "string",
+    "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
     "name": "string",
     "model_number": "string",
     "product_url": "string",
@@ -1095,7 +1095,7 @@ Status Code **200**
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |*anonymous*|[[Product](#schemaproduct)]|false|none|none|
-|» product_id|string|true|none|製品のユニークID|
+|» product_id|string(uuid)|true|none|製品のユニークID|
 |» name|string|true|none|製品名|
 |» model_number|string|false|none|型番|
 |» product_url|string|false|none|商品のURL|
@@ -1128,7 +1128,7 @@ This operation does not require authentication
 
 ```json
 {
-  "product_id": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "name": "string",
   "model_number": "string",
   "product_url": "string",
@@ -1167,7 +1167,7 @@ This operation does not require authentication
 
 ```json
 {
-  "product_id": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "name": "string",
   "model_number": "string",
   "product_url": "string",
@@ -1223,7 +1223,7 @@ This operation does not require authentication
 
 ```json
 {
-  "product_id": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "name": "string",
   "model_number": "string",
   "product_url": "string",
@@ -1271,7 +1271,7 @@ This operation does not require authentication
 
 ```json
 {
-  "product_id": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "name": "string",
   "model_number": "string",
   "product_url": "string",
@@ -1311,7 +1311,7 @@ This operation does not require authentication
 
 ```json
 {
-  "product_id": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "name": "string",
   "model_number": "string",
   "product_url": "string",
@@ -1387,7 +1387,7 @@ This operation does not require authentication
   "public_item_id": "b4000402-899b-4286-9ff8-113c61db226d",
   "name": "string",
   "product": {
-    "product_id": "string",
+    "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
     "name": "string",
     "model_number": "string",
     "product_url": "string",
@@ -1427,12 +1427,12 @@ This operation does not require authentication
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |public_item_id|string(uuid)|true|none|備品のユニークID|
-|name|string|false|none|備品名|
-|product|[Product](#schemaproduct)|false|none|製品|
+|name|string|true|none|備品名|
+|product|[Product](#schemaproduct)|true|none|製品|
 |cost|integer|false|none|備品の購入コスト|
-|purchase_date|string(date)|false|none|導入日|
+|purchase_date|string(date)|true|none|導入日|
 |expiration_date|string(date)|false|none|耐用期限|
-|is_remaining|boolean|false|none|現存しているか|
+|is_remaining|boolean|true|none|現存しているか|
 |purchase_request_id|string(uuid)|false|none|追加元の購入申請ID|
 |remarks|string|false|none|備考欄|
 
@@ -1560,7 +1560,7 @@ This operation does not require authentication
 
 ```json
 {
-  "product_id": "string",
+  "product_id": "0d012afa-f885-4e65-aeca-37e27701e2d1",
   "name": "string",
   "model_number": "string",
   "product_url": "string",
@@ -1592,7 +1592,7 @@ This operation does not require authentication
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|product_id|string|true|none|製品のユニークID|
+|product_id|string(uuid)|true|none|製品のユニークID|
 |name|string|true|none|製品名|
 |model_number|string|false|none|型番|
 |product_url|string|false|none|商品のURL|
