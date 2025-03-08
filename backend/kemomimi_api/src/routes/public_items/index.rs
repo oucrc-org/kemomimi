@@ -143,6 +143,28 @@ impl PublicItems for ApiImpl {
             ()
         })?;
 
+        // product_id の存在チェック
+        let product_exists = sqlx::query_scalar!(
+            r#"
+            SELECT EXISTS(
+                SELECT 1 FROM product WHERE product_id = $1
+            ) AS "exists!"
+            "#,
+            body.product_id
+        )
+        .fetch_one(&mut tx)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to check product existence: {:?}", e);
+            ()
+        })?;
+
+        // 製品が存在しない場合400エラー
+        if !product_exists {
+            tracing::error!("Product not found: {:?}", body.product_id);
+            return Ok(PublicItemsPostResponse::Status400);
+        }
+
         // 備品情報を挿入
         let inserted_item = sqlx::query_as!(
             PublicItemRaw,
