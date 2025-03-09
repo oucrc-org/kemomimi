@@ -22,9 +22,6 @@ struct PublicItemRaw {
     /// 備品名
     pub name: String,
 
-    /// カテゴリID
-    pub category_id: Option<String>,
-
     /// 備品の購入コスト
     pub cost: Option<i32>,
 
@@ -46,6 +43,20 @@ struct PublicItemRaw {
     // pub main_user_id: Option<String>,
     /// 備考欄
     pub remarks: Option<String>,
+}
+
+struct ProductCategoryRaw {
+    /// 製品ID
+    product_id: Uuid,
+
+    /// カテゴリID
+    category_id: String,
+
+    /// カテゴリ名
+    category_name: String,
+
+    /// カテゴリの備考
+    category_remarks: Option<String>,
 }
 
 #[async_trait]
@@ -77,7 +88,6 @@ impl PublicItems for ApiImpl {
                 pi.public_item_id as "public_item_id!",
                 pi.name as "name!",
                 pi.product_id as "product_id!",
-                c.category_id as "category_id?",
                 pi.cost as "cost?",
                 pi.purchase_date as "purchase_date!",
                 pi.expiration_date as "expiration_date?",
@@ -85,34 +95,78 @@ impl PublicItems for ApiImpl {
                 pi.remarks as "remarks?"
             FROM
                 public_item pi
-            LEFT JOIN
-                product p ON pi.product_id = p.product_id
-            LEFT JOIN
-                product_category pc ON p.product_id = pc.product_id
-            LEFT JOIN
-                category c ON pc.category_id = c.category_id
-            "#
+            "#,
         )
         .fetch_all(&*self.db_pool)
         .await
-        .unwrap();
+        .map_err(|e| {
+            tracing::error!("Failed to fetch public items: {:?}", e);
+            ()
+        })?;
 
-        let data: Vec<PublicItem> = data
+        // `product_id` ごとにカテゴリを取得
+        let product_ids: Vec<Uuid> = data.iter().map(|item| item.product_id).collect();
+
+        let category_map = if !product_ids.is_empty() {
+            let categories = query_as!(
+                ProductCategoryRaw,
+                r#"
+                SELECT
+                    pc.product_id as "product_id!",
+                    c.category_id as "category_id!",
+                    c.name as "category_name!",
+                    c.remarks as "category_remarks?"
+                FROM
+                    product_category pc
+                INNER JOIN
+                    category c ON pc.category_id = c.category_id
+                WHERE
+                    pc.product_id = ANY($1)
+                "#,
+                &product_ids
+            )
+            .fetch_all(&*self.db_pool)
+            .await
+            .map_err(|e| {
+                tracing::error!("Failed to fetch categories: {:?}", e);
+                ()
+            })?;
+
+            // `product_id` ごとにカテゴリをグループ化
+            let mut map = std::collections::HashMap::new();
+            for category in categories {
+                map.entry(category.product_id)
+                    .or_insert_with(Vec::new)
+                    .push(models::Category {
+                        category_id: category.category_id,
+                        name: category.category_name,
+                        remarks: category.category_remarks,
+                    });
+            }
+            map
+        } else {
+            std::collections::HashMap::new()
+        };
+
+        // レスポンスデータを作成
+        let data: Vec<models::PublicItem> = data
             .into_iter()
-            .map(|item| PublicItem {
+            .map(|item| models::PublicItem {
                 public_item_id: item.public_item_id,
                 name: item.name,
-                category: None, // TODO
+                category: category_map
+                    .get(&item.product_id)
+                    .and_then(|categories| categories.first().cloned()), // カテゴリを設定
                 cost: item.cost,
                 // approval_date: item.approval_date.map(|date| date.into()),
                 approval_date: None,
-                // expiration_date: item.expiration_date.map(|date| date.into()),
                 expiration_date: None,
                 is_remaining: item.is_remaining,
                 main_user: None, // ユーザー情報が不明なため、一旦 None で固定
                 remarks: item.remarks,
             })
             .collect();
+
         Ok(PublicItemsGetResponse::Status200(data))
     }
 
@@ -247,7 +301,7 @@ impl PublicItems for ApiImpl {
                 name: product.name,
                 model_number: product.model_number,
                 product_url: product.product_url,
-                categiries: Some(vec![]), // カテゴリ情報を空リストで設定
+                categories: Some(vec![]), // カテゴリ情報を空リストで設定
                 main_users: Some(vec![]), // main_users も空で設定
                 remarks: product.remarks,
             }),
