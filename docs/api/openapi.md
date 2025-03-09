@@ -152,7 +152,7 @@ This operation does not require authentication
     "name": "string",
     "model_number": "string",
     "product_url": "string",
-    "categiries": [
+    "categories": [
       {
         "category_id": "string",
         "name": "string",
@@ -218,7 +218,7 @@ This operation does not require authentication
     "name": "string",
     "model_number": "string",
     "product_url": "string",
-    "categiries": [
+    "categories": [
       {
         "category_id": "string",
         "name": "string",
@@ -276,7 +276,7 @@ This operation does not require authentication
     "name": "string",
     "model_number": "string",
     "product_url": "string",
-    "categiries": [
+    "categories": [
       {
         "category_id": "string",
         "name": "string",
@@ -326,7 +326,7 @@ This operation does not require authentication
     "name": "string",
     "model_number": "string",
     "product_url": "string",
-    "categiries": [
+    "categories": [
       {
         "category_id": "string",
         "name": "string",
@@ -1058,7 +1058,7 @@ This operation does not require authentication
     "name": "string",
     "model_number": "string",
     "product_url": "string",
-    "categiries": [
+    "categories": [
       {
         "category_id": "string",
         "name": "string",
@@ -1099,7 +1099,7 @@ Status Code **200**
 |» name|string|true|none|製品名|
 |» model_number|string|false|none|型番|
 |» product_url|string|false|none|商品のURL|
-|» categiries|[[Category](#schemacategory)]|false|none|none|
+|» categories|[[Category](#schemacategory)]|false|none|none|
 |»» category_id|string|true|none|カテゴリのユニークID|
 |»» name|string|true|none|カテゴリ名|
 |»» remarks|string|false|none|備考欄|
@@ -1132,7 +1132,7 @@ This operation does not require authentication
   "name": "string",
   "model_number": "string",
   "product_url": "string",
-  "categiries": [
+  "categories": [
     {
       "category_id": "string",
       "name": "string",
@@ -1171,7 +1171,7 @@ This operation does not require authentication
   "name": "string",
   "model_number": "string",
   "product_url": "string",
-  "categiries": [
+  "categories": [
     {
       "category_id": "string",
       "name": "string",
@@ -1227,7 +1227,7 @@ This operation does not require authentication
   "name": "string",
   "model_number": "string",
   "product_url": "string",
-  "categiries": [
+  "categories": [
     {
       "category_id": "string",
       "name": "string",
@@ -1275,7 +1275,7 @@ This operation does not require authentication
   "name": "string",
   "model_number": "string",
   "product_url": "string",
-  "categiries": [
+  "categories": [
     {
       "category_id": "string",
       "name": "string",
@@ -1315,7 +1315,7 @@ This operation does not require authentication
   "name": "string",
   "model_number": "string",
   "product_url": "string",
-  "categiries": [
+  "categories": [
     {
       "category_id": "string",
       "name": "string",
@@ -1391,7 +1391,7 @@ This operation does not require authentication
     "name": "string",
     "model_number": "string",
     "product_url": "string",
-    "categiries": [
+    "categories": [
       {
         "category_id": "string",
         "name": "string",
@@ -1564,7 +1564,7 @@ This operation does not require authentication
   "name": "string",
   "model_number": "string",
   "product_url": "string",
-  "categiries": [
+  "categories": [
     {
       "category_id": "string",
       "name": "string",
@@ -1596,7 +1596,7 @@ This operation does not require authentication
 |name|string|true|none|製品名|
 |model_number|string|false|none|型番|
 |product_url|string|false|none|商品のURL|
-|categiries|[[Category](#schemacategory)]|false|none|none|
+|categories|[[Category](#schemacategory)]|false|none|none|
 |main_users|[[User](#schemauser)]|false|none|none|
 |remarks|string|false|none|備考欄|
 

@@ -578,9 +578,9 @@ pub struct Product {
     #[serde(skip_serializing_if="Option::is_none")]
     pub product_url: Option<String>,
 
-    #[serde(rename = "categiries")]
+    #[serde(rename = "categories")]
     #[serde(skip_serializing_if="Option::is_none")]
-    pub categiries: Option<Vec<models::Category>>,
+    pub categories: Option<Vec<models::Category>>,
 
     #[serde(rename = "main_users")]
     #[serde(skip_serializing_if="Option::is_none")]
@@ -602,7 +602,7 @@ impl Product {
             name,
             model_number: None,
             product_url: None,
-            categiries: None,
+            categories: None,
             main_users: None,
             remarks: None,
         }
@@ -637,7 +637,7 @@ impl std::fmt::Display for Product {
                 ].join(",")
             }),
 
-            // Skipping categiries in query parameter serialization
+            // Skipping categories in query parameter serialization
 
             // Skipping main_users in query parameter serialization
 
@@ -670,7 +670,7 @@ impl std::str::FromStr for Product {
             pub name: Vec<String>,
             pub model_number: Vec<String>,
             pub product_url: Vec<String>,
-            pub categiries: Vec<Vec<models::Category>>,
+            pub categories: Vec<Vec<models::Category>>,
             pub main_users: Vec<Vec<models::User>>,
             pub remarks: Vec<String>,
         }
@@ -698,7 +698,7 @@ impl std::str::FromStr for Product {
                     "model_number" => intermediate_rep.model_number.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "product_url" => intermediate_rep.product_url.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    "categiries" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
+                    "categories" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
                     "main_users" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
                     #[allow(clippy::redundant_clone)]
                     "remarks" => intermediate_rep.remarks.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
@@ -716,7 +716,7 @@ impl std::str::FromStr for Product {
             name: intermediate_rep.name.into_iter().next().ok_or_else(|| "name missing in Product".to_string())?,
             model_number: intermediate_rep.model_number.into_iter().next(),
             product_url: intermediate_rep.product_url.into_iter().next(),
-            categiries: intermediate_rep.categiries.into_iter().next(),
+            categories: intermediate_rep.categories.into_iter().next(),
             main_users: intermediate_rep.main_users.into_iter().next(),
             remarks: intermediate_rep.remarks.into_iter().next(),
         })
