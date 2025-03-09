@@ -297,7 +297,7 @@ impl PublicItems for ApiImpl {
             public_item_id: inserted_item.public_item_id,
             name: inserted_item.name,
             product: Some(models::Product {
-                product_id: product.product_id.to_string(),
+                product_id: product.product_id,
                 name: product.name,
                 model_number: product.model_number,
                 product_url: product.product_url,
