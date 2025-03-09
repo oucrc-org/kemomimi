@@ -213,13 +213,12 @@ impl PublicItems for ApiImpl {
             ()
         })?;
 
-        // 製品が存在しない場合400エラー
         if !product_exists {
             tracing::error!("Product not found: {:?}", body.product_id);
             return Ok(PublicItemsPostResponse::Status400);
         }
 
-        // 備品情報を挿入
+        // 備品情報の挿入
         let inserted_item = sqlx::query_as!(
             PublicItemRaw,
             r#"
@@ -244,14 +243,14 @@ impl PublicItems for ApiImpl {
                 is_remaining, 
                 remarks
             "#,
-            new_public_item_id,                     // $1: 備品ID
-            body.name,                              // $2: 備品名
-            body.product_id,                        // $3: 製品ID（既存の製品を参照）
-            body.cost,                              // $4: 購入コスト
-            body.purchase_date.map(|d| d.into()),   // $5: 導入日
-            body.expiration_date.map(|d| d.into()), // $6: 耐用期限
-            body.is_remaining,                      // $7: 現存状態
-            body.remarks                            // $8: 備考
+            new_public_item_id,                     // 備品ID
+            body.name,                              // 備品名
+            body.product_id,                        // 製品ID
+            body.cost,                              // 購入コスト
+            body.purchase_date.map(|d| d.into()),   // 導入日
+            body.expiration_date.map(|d| d.into()), // 耐用期限
+            body.is_remaining.unwrap_or(true),      // 現存状態（NULLなら true とする）
+            body.remarks                            // 備考
         )
         .fetch_one(&mut tx)
         .await
@@ -292,19 +291,58 @@ impl PublicItems for ApiImpl {
             ()
         })?;
 
-        // レスポンスデータを作成
+        // 製品に紐づくカテゴリ情報を取得
+        let product_categories = {
+            let category_rows = sqlx::query_as!(
+                ProductCategoryRaw,
+                r#"
+                SELECT
+                    pc.product_id as "product_id!",
+                    c.category_id as "category_id!",
+                    c.name as "category_name!",
+                    c.remarks as "category_remarks?"
+                FROM
+                    product_category pc
+                INNER JOIN
+                    category c ON pc.category_id = c.category_id
+                WHERE
+                    pc.product_id = $1
+                "#,
+                body.product_id
+            )
+            .fetch_all(&*self.db_pool)
+            .await
+            .map_err(|e| {
+                tracing::error!("Failed to fetch categories for product: {:?}", e);
+                ()
+            })?;
+
+            category_rows
+                .into_iter()
+                .map(|cat| models::Category {
+                    category_id: cat.category_id,
+                    name: cat.category_name,
+                    remarks: cat.category_remarks,
+                })
+                .collect::<Vec<_>>()
+        };
+
+        // 製品情報を構築
+        let product_instance = models::Product {
+            product_id: product.product_id,
+            name: product.name,
+            model_number: product.model_number,
+            product_url: product.product_url,
+            categories: Some(product_categories), // 
+            main_users: Some(vec![]),             // Todo: 現時点では空
+            remarks: product.remarks,
+        };
+
+        // レスポンス用備品詳細情報の作成
         let public_item_details = models::PublicItemDetails {
             public_item_id: inserted_item.public_item_id,
             name: inserted_item.name,
-            product: Some(models::Product {
-                product_id: product.product_id,
-                name: product.name,
-                model_number: product.model_number,
-                product_url: product.product_url,
-                categories: Some(vec![]), // カテゴリ情報を空リストで設定
-                main_users: Some(vec![]), // main_users も空で設定
-                remarks: product.remarks,
-            }),
+            product: product_instance,
             cost: inserted_item.cost,
             purchase_date: inserted_item.purchase_date,
             expiration_date: inserted_item.expiration_date,
@@ -313,7 +351,6 @@ impl PublicItems for ApiImpl {
             remarks: inserted_item.remarks,
         };
 
-        // 成功レスポンスを返却
         Ok(PublicItemsPostResponse::Status201(public_item_details))
     }
 
