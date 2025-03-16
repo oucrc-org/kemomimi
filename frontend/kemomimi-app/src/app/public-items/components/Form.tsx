@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Product, PublicItemEntry } from '../../../utils/types';
 import { fetchProducts, addPublicItem } from '../../../utils/api';
 
+// マテリアルUI
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Stack from '@mui/material/Stack';
+
 interface ItemFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -91,7 +97,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
       purchase_date: purchaseDate || undefined,
       expiration_date: expirationDate || undefined,
       is_remaining: isRemaining,
-      purchase_request_id: '0000',
+      purchase_request_id: '0000', //購入リクエストidはよく分かってないので仮置き
       remarks: remarks.trim() || undefined,
     };
 
@@ -354,44 +360,40 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           {/* ボタン */}
-          <div className="flex justify-end space-x-2">
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              登録
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              キャンセル
-            </button>
+          <div className="flex justify-end">
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                登録
+              </Button>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={onClose}
+              >
+                キャンセル
+              </Button>
+            </Stack>
           </div>
         </form>
 
         {/* 右上の閉じるボタン */}
-        <button
+        <IconButton
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none"
           aria-label="Close"
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            zIndex: 10
+          }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
+          <CloseIcon />
+        </IconButton>
       </div>
     </div>
   );
