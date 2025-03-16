@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Product, PublicItemEntry } from '../../../utils/types';
-import { fetchProducts, addPublicItem } from '../../../utils/api';
+import { fetchProducts, addPublicItem, addProduct } from '../../../utils/api';
 
 // マテリアルUI
 import Button from '@mui/material/Button';
@@ -104,8 +104,10 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
     };
 
     try {
-      const data = await addPublicItem(postData);
-      console.log('登録成功:', data);
+      const data0 = await addProduct(postData);
+      console.log('製品登録成功:', data0);
+      const data1 = await addPublicItem(postData);
+      console.log('備品登録成功:', data1);
 
       // 登録後の処理
       setName('');

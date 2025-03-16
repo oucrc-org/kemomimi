@@ -85,7 +85,7 @@ export const addPublicItem = async (data: PublicItemEntry): Promise<PublicItem> 
 };
 
 // 製品登録
-export const createProduct = async (data: ProductEntry): Promise<Product> => {
+export const addProduct = async (data: ProductEntry): Promise<Product> => {
   const endpoint = USE_MOCK_API 
     ? `${API_BASE_URL}/products-api`
     : `${API_BASE_URL}/products`;
