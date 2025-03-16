@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 interface ItemFormProps {
   isOpen: boolean;
@@ -333,17 +335,17 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
           </div>
 
           {/* is_remaining */}
-          <div className="mb-4 flex items-center">
-            <input
-              id="is_remaining"
-              type="checkbox"
-              checked={isRemaining}
-              onChange={(e) => setIsRemaining(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          <div className="mb-4">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isRemaining}
+                  onChange={(e) => setIsRemaining(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="現存しているか"
             />
-            <label htmlFor="is_remaining" className="ml-2 block text-sm text-gray-700">
-              現存しているか
-            </label>
           </div>
 
           {/* remarks */}
