@@ -6,37 +6,46 @@ import type { PublicItem, Product } from '../../utils/types';
 import ItemTable from './components/ItemList';
 import SearchBar from './components/SearchBar';
 import AddButton from './components/AddButton';
+import ItemForm from './components/Form';
 
 const PublicItemsPage: React.FC = () => {
   const [items, setItems] = useState<PublicItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  // モーダルの状態管理
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const loadItems = async () => {
-      try {
-        const data = await fetchPublicItems();
-        setItems(data);
-      } catch (err) {
-        setError('Failed to fetch items');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadItems();
-  }, []);
-
-  const handleSearch = async (searchTerm: string) => {
-    setLoading(true);
+  const loadItems = async (searchTerm?: string) => {
     try {
-      const data = await fetchPublicItems({ search: searchTerm });
+      setLoading(true);
+      const data = await fetchPublicItems(searchTerm ? { search: searchTerm } : undefined);
       setItems(data);
     } catch (err) {
       setError('Failed to fetch items');
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    loadItems();
+  }, []);
+
+  const handleSearch = async (searchTerm: string) => {
+    loadItems(searchTerm);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  
+  const handleAddSuccess = () => {
+    setIsModalOpen(false);
+    loadItems();
   };
 
   return (
@@ -47,12 +56,19 @@ const PublicItemsPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Public Items</h1>
       <div className="flex justify-between items-center mb-1">
         <SearchBar onSearch={handleSearch} />
-        <AddButton />
+        <AddButton onOpenModal={handleOpenModal} />
       </div>
       <div className="my-2"></div> 
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       <ItemTable items={items} />
+
+      {/* モーダルコンポーネント */}
+      <ItemForm 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handleAddSuccess}
+      />
     </div>
   );
 };
