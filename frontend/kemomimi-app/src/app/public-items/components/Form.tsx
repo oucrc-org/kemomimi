@@ -70,6 +70,9 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
     if (name === '') {
       newErrors.name = '備品名は必須です。';
     }
+    if (selectedProduct === null) {
+      (newErrors as any).selectedProduct = '製品を選択してください。';
+    }
     return newErrors;
   };
 
@@ -180,7 +183,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
               defaultValue=""
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">製品を選択</option>
+              <option value="" disabled>製品を選択</option>
               <option value="new">新規製品登録</option>
               {products.map((product) => (
                 <option key={product.product_id} value={product.product_id}>
@@ -188,6 +191,11 @@ const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
                 </option>
               ))}
             </select>
+            {(errors as any).selectedProduct && (
+              <p className="mt-1 text-sm text-red-600" id="product-error">
+                {(errors as any).selectedProduct}
+              </p>
+            )}
           </div>
           {/* Product detail */}
           {selectedProduct === 'new' ? (
