@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 interface AddButtonProps {
@@ -8,14 +7,13 @@ interface AddButtonProps {
 
 const AddButton: React.FC<AddButtonProps> = ({ onOpenModal }) => {
   return (
-    <Button
-      variant="contained"
-      color="primary"
-      startIcon={<AddIcon />}
+    <button
       onClick={onOpenModal}
+      className="flex items-center border p-2 rounded hover:bg-gray-100 transition-colors"
     >
-      備品追加
-    </Button>
+      <AddIcon className="mr-1" />
+      <span>備品追加</span>
+    </button>
   );
 };
 
