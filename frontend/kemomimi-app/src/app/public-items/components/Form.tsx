@@ -1,0 +1,322 @@
+import React, { useState, useEffect } from 'react';
+import { Product, PublicItemEntry } from '../../../utils/types';
+import { fetchProducts, addPublicItem, addProduct } from '../../../utils/api';
+
+// マテリアルUI
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Stack from '@mui/material/Stack';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import ProductDetails from './ProductForm';
+
+interface ItemFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+const ItemForm: React.FC<ItemFormProps> = ({ isOpen, onClose, onSuccess }) => {
+  const [name, setName] = useState('');
+  const [cost, setCost] = useState<number | undefined>(undefined);
+  const [purchaseDate, setPurchaseDate] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+  const [isRemaining, setIsRemaining] = useState(true);
+  const [remarks, setRemarks] = useState('');
+
+  const [selectedProduct, setSelectedProduct] = useState<Product | 'new' | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key in keyof PublicItemEntry]?: string }>({});
+
+  const firstInputRef = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isOpen && firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchProducts();
+        console.log('Fetched products:', data); // デバッグログ
+        setProducts(data);
+      } catch (err) {
+        console.error('Error loading products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadProducts();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  const validate = (): { [key in keyof PublicItemEntry]?: string } => {
+    const newErrors: { [key in keyof PublicItemEntry]?: string } = {};
+    if (name === '') {
+      newErrors.name = '備品名は必須です。';
+    }
+    if (selectedProduct === null) {
+      (newErrors as any).selectedProduct = '製品を選択してください。';
+    }
+    return newErrors;
+  };
+
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === 'new') {
+      setSelectedProduct('new');
+    } else if (value === '') {
+      setSelectedProduct(null);
+    } else {
+      const product = products.find(prod => prod.product_id === value);
+      setSelectedProduct(product || null);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    const postData: PublicItemEntry = {
+      name: name.trim(),
+      cost: cost,
+      purchase_date: purchaseDate || undefined,
+      expiration_date: expirationDate || undefined,
+      is_remaining: isRemaining,
+      purchase_request_id: '0000', //購入リクエストidはよく分かってないので仮置き
+      remarks: remarks.trim() || undefined,
+    };
+
+    try {
+      const data0 = await addProduct(postData);
+      console.log('製品登録成功:', data0);
+      const data1 = await addPublicItem(postData);
+      console.log('備品登録成功:', data1);
+
+      // 登録後の処理
+      setName('');
+      setCost(undefined);
+      setPurchaseDate('');
+      setExpirationDate('');
+      setIsRemaining(true);
+      setRemarks('');
+      setErrors({});
+
+      onClose();
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.error('通信エラー:', error);
+      alert('通信エラーが発生しました');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative max-h-[80vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 id="modal-title" className="text-2xl font-semibold mb-4">新規備品登録</h2>
+        <form onSubmit={handleSubmit} noValidate>
+          {/* Name */}
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              備品名 <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="name"
+              type="text"
+              ref={firstInputRef}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={`mt-1 block w-full px-3 py-2 border ${errors.name ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+            />
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-600" id="name-error">
+                {errors.name}
+              </p>
+            )}
+          </div>
+          {/* Product */}
+          <div className="mb-4">
+            <label
+              htmlFor="product"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+            製品選択 <span className="text-red-500">*</span>
+            </label>
+            <select 
+              id="product-select"
+              onChange={handleSelect}
+              defaultValue=""
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="" disabled>製品を選択</option>
+              <option value="new">新規製品登録</option>
+              {products.map((product) => (
+                <option key={product.product_id} value={product.product_id}>
+                  {product.name}
+                </option>
+              ))}
+            </select>
+            {(errors as any).selectedProduct && (
+              <p className="mt-1 text-sm text-red-600" id="product-error">
+                {(errors as any).selectedProduct}
+              </p>
+            )}
+          </div>
+          {/* Product detail */}
+          {selectedProduct === 'new' ? (
+            <ProductDetails
+              isNew={true}
+              product={null}
+            />
+          ) : selectedProduct && (
+            <ProductDetails
+              isNew={false}
+              product={selectedProduct}
+            />
+          )}
+          {/* Cost */}
+          <div className="mb-4">
+            <label htmlFor="cost" className="block text-sm font-medium text-gray-700">
+              購入コスト
+            </label>
+            <input
+              id="cost"
+              type="number"
+              value={cost === undefined ? '' : cost}
+              onChange={(e) => setCost(e.target.value ? Number(e.target.value) : undefined)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          {/* Purchase Date */}
+          <div className="mb-4">
+            <label htmlFor="purchase_date" className="block text-sm font-medium text-gray-700">
+              購入日
+            </label>
+            <input
+              id="purchase_date"
+              type="date"
+              value={purchaseDate}
+              onChange={(e) => setPurchaseDate(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          {/* Expiration Date */}
+          <div className="mb-4">
+            <label htmlFor="expiration_date" className="block text-sm font-medium text-gray-700">
+              耐用期限
+            </label>
+            <input
+              id="expiration_date"
+              type="date"
+              value={expirationDate}
+              onChange={(e) => setExpirationDate(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus.border-blue-500"
+            />
+          </div>
+
+          {/* is_remaining */}
+          <div className="mb-4">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isRemaining}
+                  onChange={(e) => setIsRemaining(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="現存しているか"
+            />
+          </div>
+
+          {/* remarks */}
+          <div className="mb-4">
+            <label htmlFor="remarks" className="block text-sm font-medium text-gray-700">
+              備考
+            </label>
+            <textarea
+              id="remarks"
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          {/* ボタン */}
+          <div className="flex justify-end">
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                登録
+              </Button>
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={onClose}
+              >
+                キャンセル
+              </Button>
+            </Stack>
+          </div>
+        </form>
+
+        {/* 右上の閉じるボタン */}
+        <IconButton
+          onClick={onClose}
+          aria-label="Close"
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            zIndex: 10
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </div>
+    </div>
+  );
+};
+
+export default ItemForm;

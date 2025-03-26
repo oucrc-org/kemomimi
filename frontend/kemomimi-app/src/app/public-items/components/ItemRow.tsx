@@ -1,3 +1,4 @@
+// 製品列のコンポーネント
 import React from 'react';
 import { PublicItem } from '../../../utils/api';
 
@@ -11,10 +12,10 @@ const ItemRow: React.FC<ItemRowProps> = ({ item }) => {
 
   let rowClass = "hover:bg-gray-100";
   if (expirationDate < now) {
-    rowClass = "bg-red-300 hover:bg-red-400";
+    rowClass = "bg-red-400 hover:bg-red-500";
   }
   else if (! item.is_remaining) {
-    rowClass = "bg-gray-300 hover:bg-gray-400";
+    rowClass = "bg-gray-400 hover:bg-gray-500";
   }
   return (
     <tr className={rowClass}>
