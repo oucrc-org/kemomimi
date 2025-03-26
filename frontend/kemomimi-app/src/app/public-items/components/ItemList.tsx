@@ -1,6 +1,6 @@
 //　製品リストのコンポーネント
 import React from 'react';
-import { PublicItem } from '../../../utils/api';
+import { PublicItem } from '../../../utils/types';
 import ItemRow from './ItemRow';
 
 interface ItemTableProps {
