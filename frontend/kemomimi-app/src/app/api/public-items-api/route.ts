@@ -68,7 +68,7 @@ export async function GET(request: Request) {
       },
       approval_date: "2020-01-01",
       expiration_date: "2021-01-01",
-      is_remaining: false,
+      is_remaining: true,
       main_user: {
         user_id: "string",
         handle_name: "KEMO",

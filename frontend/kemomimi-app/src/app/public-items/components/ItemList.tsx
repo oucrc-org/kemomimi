@@ -19,6 +19,7 @@ const ItemTable: React.FC<ItemTableProps> = ({ items }) => (
           <th className="px-4 py-3 text-center text-gray-700">耐用期限</th>
           <th className="px-4 py-3 text-center text-gray-700">メインユーザー</th>
           <th className="px-4 py-3 text-center text-gray-700">備考</th>
+          <th className="px-4 py-3 text-center text-gray-700">操作</th>
         </tr>
       </thead>
       <tbody>
