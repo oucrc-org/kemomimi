@@ -106,3 +106,30 @@ export const addProduct = async (data: ProductEntry): Promise<Product> => {
   return response.json();
 };
 
+// 備品更新
+export const updatePublicItem = async (itemId: string, itemData: Partial<PublicItemEntry>) => {
+  const response = await fetch(`/api/public-items-api/${itemId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(itemData),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update public item');
+  }
+
+  return response.json();
+};
+
+// 備品削除
+export const deletePublicItem = async (itemId: string) => {
+  const response = await fetch(`/api/public-items-api/${itemId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete public item');
+  }
+};
