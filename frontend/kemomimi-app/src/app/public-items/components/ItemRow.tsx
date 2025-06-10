@@ -13,13 +13,13 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onEdit, onDelete }) => {
 
   // 背景色の条件分岐
   const getBgColor = () => {
-    if (!item.is_remaining) return 'bg-gray-500';
-    if (item.expiration_date && new Date(item.expiration_date) < new Date()) return 'bg-red-500';
-    return 'bg-white';
+    if (!item.is_remaining) return 'bg-gray-700 hover:bg-gray-600';
+    if (item.expiration_date && new Date(item.expiration_date) < new Date()) return 'bg-red-600 hover:bg-red-500';
+    return 'bg-white hover:bg-gray-100';
   };
 
   return (
-    <tr className={`border-b ${getBgColor()} hover:bg-gray-50`}>
+    <tr className={getBgColor()}>
       <td className="px-4 py-3">{item.name}</td>
       <td className="px-4 py-3 text-center">{item.category?.name || '-'}</td>
       <td className="px-4 py-3 text-center">{item.cost ? `¥${item.cost.toLocaleString()}` : '-'}</td>
@@ -43,8 +43,11 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onEdit, onDelete }) => {
                   setShowDropdown(false);
                   onEdit && onEdit(item);
                 }}
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 flex items-center gap-2 transition-colors"
               >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
                 編集
               </button>
               <button
