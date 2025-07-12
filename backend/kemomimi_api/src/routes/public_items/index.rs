@@ -1,4 +1,4 @@
-use crate::app::AppState;
+use crate::AppState;
 use axum::{async_trait, extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use chrono::Utc;

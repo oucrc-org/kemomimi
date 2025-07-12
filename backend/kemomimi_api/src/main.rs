@@ -1,7 +1,4 @@
-mod app;
-mod routes;
-
-use app::app;
+use kemomimi_api::app;
 
 #[tokio::main]
 async fn main() {
