@@ -1,23 +1,14 @@
-use axum::{
-    body::Bytes,
-    extract::{Host, MatchedPath},
-    http::{HeaderMap, Method, Request},
-    response::Response,
-    Router,
-};
-use axum_extra::extract::CookieJar;
-use chrono::Utc;
 use openapi::server::new;
+
+use axum::Router;
 use sqlx::{PgPool, Pool, Postgres};
+use std::env;
 use std::sync::Arc;
-use std::{env, time::Duration};
 use tower_http::{
-    classify::ServerErrorsFailureClass,
     cors::{Any, CorsLayer},
     trace::TraceLayer,
 };
-use tracing::{info, info_span, Level, Span};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing::Level;
 
 #[derive(Clone, Debug)]
 pub struct AppState {
