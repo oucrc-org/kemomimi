@@ -1,18 +1,7 @@
-use axum::{extract::Host, http::Method, Router};
-use axum_extra::extract::CookieJar;
-use chrono::Utc;
-use kemomimi_api::app;
-use openapi::server::new;
-use sqlx::{PgPool, Pool, Postgres};
-use std::env;
-use std::sync::Arc;
-use tower_http::cors::{Any, CorsLayer};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
-
-mod libs;
-use libs::ApiImpl;
-
+mod app;
 mod routes;
+
+use app::app;
 
 #[tokio::main]
 async fn main() {
