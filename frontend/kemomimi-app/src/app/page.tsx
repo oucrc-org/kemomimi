@@ -1,5 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
+import { 
+  FaClipboardList, 
+  FaFolderOpen, 
+  FaPlus, 
+  FaChartBar,
+  FaEdit,
+  FaSearch,
+  FaHistory
+} from "react-icons/fa";
 
 export default function Home() {
   return (
@@ -86,15 +95,24 @@ export default function Home() {
           <h2 className="text-xl font-bold text-gray-800 mb-4">主な機能</h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="p-4 border border-gray-200 rounded">
-              <h3 className="font-semibold text-gray-800 mb-2">備品登録・管理</h3>
+              <div className="flex items-center gap-2 mb-2">
+                <FaEdit className="text-blue-600" />
+                <h3 className="font-semibold text-gray-800">備品登録・管理</h3>
+              </div>
               <p className="text-gray-600 text-sm">備品情報の登録、編集、削除が可能です。</p>
             </div>
             <div className="p-4 border border-gray-200 rounded">
-              <h3 className="font-semibold text-gray-800 mb-2">検索・フィルタ</h3>
+              <div className="flex items-center gap-2 mb-2">
+                <FaSearch className="text-green-600" />
+                <h3 className="font-semibold text-gray-800">検索・フィルタ</h3>
+              </div>
               <p className="text-gray-600 text-sm">カテゴリやキーワードで備品を検索できます。</p>
             </div>
             <div className="p-4 border border-gray-200 rounded">
-              <h3 className="font-semibold text-gray-800 mb-2">履歴管理</h3>
+              <div className="flex items-center gap-2 mb-2">
+                <FaHistory className="text-purple-600" />
+                <h3 className="font-semibold text-gray-800">履歴管理</h3>
+              </div>
               <p className="text-gray-600 text-sm">操作履歴を記録・確認できます。</p>
             </div>
           </div>
@@ -108,23 +126,31 @@ export default function Home() {
               href="/public-items"
               className="border border-gray-300 hover:border-blue-500 p-3 rounded text-center transition-colors"
             >
-              <div className="text-2xl mb-1">📋</div>
+              <div className="flex justify-center mb-2">
+                <FaClipboardList className="text-2xl text-blue-600" />
+              </div>
               <div className="text-sm font-medium">全備品</div>
             </Link>
             <Link 
               href="/categories"
               className="border border-gray-300 hover:border-blue-500 p-3 rounded text-center transition-colors"
             >
-              <div className="text-2xl mb-1">📁</div>
+              <div className="flex justify-center mb-2">
+                <FaFolderOpen className="text-2xl text-green-600" />
+              </div>
               <div className="text-sm font-medium">カテゴリ</div>
             </Link>
             <div className="border border-gray-200 p-3 rounded text-center text-gray-400 cursor-not-allowed">
-              <div className="text-2xl mb-1">➕</div>
+              <div className="flex justify-center mb-2">
+                <FaPlus className="text-2xl" />
+              </div>
               <div className="text-sm font-medium">新規登録</div>
               <div className="text-xs">準備中</div>
             </div>
             <div className="border border-gray-200 p-3 rounded text-center text-gray-400 cursor-not-allowed">
-              <div className="text-2xl mb-1">📈</div>
+              <div className="flex justify-center mb-2">
+                <FaChartBar className="text-2xl" />
+              </div>
               <div className="text-sm font-medium">統計</div>
               <div className="text-xs">準備中</div>
             </div>
