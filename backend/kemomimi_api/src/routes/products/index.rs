@@ -13,11 +13,7 @@ impl Products for AppState {
     #[doc = ""]
     #[doc = " ProductsGet - GET /products"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -41,11 +37,7 @@ impl Products for AppState {
     #[doc = ""]
     #[doc = " ProductsPost - POST /products"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_post<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -70,11 +62,7 @@ impl Products for AppState {
     #[doc = ""]
     #[doc = " ProductsProductIdDelete - DELETE /products/{product-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_product_id_delete<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -99,11 +87,7 @@ impl Products for AppState {
     #[doc = ""]
     #[doc = " ProductsProductIdGet - GET /products/{product-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_product_id_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -128,11 +112,7 @@ impl Products for AppState {
     #[doc = ""]
     #[doc = " ProductsProductIdPut - PUT /products/{product-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_product_id_put<'life0, 'async_trait>(
         &'life0 self,
         method: Method,

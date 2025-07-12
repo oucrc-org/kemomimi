@@ -65,11 +65,7 @@ impl PublicItems for AppState {
     #[doc = ""]
     #[doc = " PublicItemsGet - GET /public-items"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     #[tracing::instrument]
     async fn public_items_get<'life0>(
         &'life0 self,
@@ -174,11 +170,7 @@ impl PublicItems for AppState {
     #[doc = ""]
     #[doc = " PublicItemsPost - POST /public-items"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_post<'life0>(
         &'life0 self,
         _method: Method,
@@ -358,11 +350,7 @@ impl PublicItems for AppState {
     #[doc = ""]
     #[doc = " PublicItemsPublicItemIdDelete - DELETE /public-items/{public-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_public_item_id_delete<'life0>(
         &'life0 self,
         method: Method,
@@ -381,11 +369,7 @@ impl PublicItems for AppState {
     #[doc = ""]
     #[doc = " PublicItemsPublicItemIdGet - GET /public-items/{public-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_public_item_id_get<'life0>(
         &'life0 self,
         method: Method,
@@ -404,11 +388,7 @@ impl PublicItems for AppState {
     #[doc = ""]
     #[doc = " PublicItemsPublicItemIdPut - PUT /public-items/{public-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_public_item_id_put<'life0>(
         &'life0 self,
         method: Method,

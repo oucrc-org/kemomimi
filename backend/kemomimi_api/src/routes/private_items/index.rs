@@ -15,11 +15,7 @@ impl PrivateItems for AppState {
     #[doc = ""]
     #[doc = " PrivateItemsGet - GET /private-items"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn private_items_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -43,11 +39,7 @@ impl PrivateItems for AppState {
     #[doc = ""]
     #[doc = " PrivateItemsPost - POST /private-items"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn private_items_post<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -72,11 +64,7 @@ impl PrivateItems for AppState {
     #[doc = ""]
     #[doc = " PrivateItemsPrivateItemIdDelete - DELETE /private-items/{private-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn private_items_private_item_id_delete<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -101,11 +89,7 @@ impl PrivateItems for AppState {
     #[doc = ""]
     #[doc = " PrivateItemsPrivateItemIdGet - GET /private-items/{private-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn private_items_private_item_id_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -130,11 +114,7 @@ impl PrivateItems for AppState {
     #[doc = ""]
     #[doc = " PrivateItemsPrivateItemIdPut - PUT /private-items/{private-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn private_items_private_item_id_put<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
