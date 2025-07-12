@@ -19,22 +19,9 @@ use tower_http::{
 use tracing::{info, info_span, Level, Span};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-pub async fn app() -> Router {
-    // ログ収集の有効化
-    tracing_subscriber::fmt()
-        .with_max_level(Level::DEBUG)
-        .init();
-
-    dotenvy::dotenv().expect("Failed to read .env file");
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-
-    let pool = Arc::new(PgPool::connect(&database_url).await.unwrap());
-    // build our application with a route
-    // ApiImpl を Arc に包む（必要なら）
-    let api_impl = AppState { db_pool: pool }; // 実際の構造体を定義する
-    new(api_impl)
-        .layer(CorsLayer::new().allow_origin(Any))
-        .layer(TraceLayer::new_for_http())
+#[derive(Clone, Debug)]
+pub struct AppState {
+    pub db_pool: Arc<Pool<Postgres>>,
 }
 
 impl AsRef<AppState> for AppState {
@@ -43,7 +30,20 @@ impl AsRef<AppState> for AppState {
     }
 }
 
-#[derive(Clone, Debug)]
-pub struct AppState {
-    pub db_pool: Arc<Pool<Postgres>>,
+pub async fn app() -> Router {
+    // ログ収集の有効化
+    tracing_subscriber::fmt()
+        .with_max_level(Level::DEBUG)
+        .init();
+
+    // dbと接続
+    dotenvy::dotenv().expect("Failed to read .env file");
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = Arc::new(PgPool::connect(&database_url).await.unwrap());
+
+    // app作成
+    let state = AppState { db_pool: pool };
+    new(state)
+        .layer(CorsLayer::new().allow_origin(Any))
+        .layer(TraceLayer::new_for_http())
 }
