@@ -1,4 +1,4 @@
-use crate::app::ApiImpl;
+use crate::app::AppState;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,7 +8,7 @@ use openapi::{
     },
     models,
 };
-impl Products for ApiImpl {
+impl Products for AppState {
     #[doc = " 製品一覧取得."]
     #[doc = ""]
     #[doc = " ProductsGet - GET /products"]

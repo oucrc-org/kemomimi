@@ -9,8 +9,8 @@ use openapi::{
     models,
 };
 
-use crate::app::ApiImpl;
-impl PrivateItems for ApiImpl {
+use crate::app::AppState;
+impl PrivateItems for AppState {
     #[doc = " 私物一覧取得."]
     #[doc = ""]
     #[doc = " PrivateItemsGet - GET /private-items"]

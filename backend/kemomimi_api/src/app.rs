@@ -31,19 +31,19 @@ pub async fn app() -> Router {
     let pool = Arc::new(PgPool::connect(&database_url).await.unwrap());
     // build our application with a route
     // ApiImpl を Arc に包む（必要なら）
-    let api_impl = ApiImpl { db_pool: pool }; // 実際の構造体を定義する
+    let api_impl = AppState { db_pool: pool }; // 実際の構造体を定義する
     new(api_impl)
         .layer(CorsLayer::new().allow_origin(Any))
         .layer(TraceLayer::new_for_http())
 }
 
-impl AsRef<ApiImpl> for ApiImpl {
-    fn as_ref(&self) -> &ApiImpl {
+impl AsRef<AppState> for AppState {
+    fn as_ref(&self) -> &AppState {
         self
     }
 }
 
 #[derive(Clone, Debug)]
-pub struct ApiImpl {
+pub struct AppState {
     pub db_pool: Arc<Pool<Postgres>>,
 }

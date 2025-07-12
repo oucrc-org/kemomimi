@@ -1,4 +1,4 @@
-use crate::app::ApiImpl;
+use crate::app::AppState;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,7 +8,7 @@ use openapi::{
     },
     models,
 };
-impl Categories for ApiImpl {
+impl Categories for AppState {
     #[doc = " カテゴリ削除."]
     #[doc = ""]
     #[doc = " CategoriesCategoryIdDelete - DELETE /categories/{category-id}"]

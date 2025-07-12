@@ -1,4 +1,4 @@
-use crate::app::ApiImpl;
+use crate::app::AppState;
 use axum::{async_trait, extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use chrono::Utc;
@@ -60,7 +60,7 @@ struct ProductCategoryRaw {
 }
 
 #[async_trait]
-impl PublicItems for ApiImpl {
+impl PublicItems for AppState {
     #[doc = " 備品一覧取得."]
     #[doc = ""]
     #[doc = " PublicItemsGet - GET /public-items"]
