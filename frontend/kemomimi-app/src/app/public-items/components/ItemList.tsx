@@ -5,9 +5,11 @@ import ItemRow from './ItemRow';
 
 interface ItemTableProps {
   items: PublicItem[];
+  onEdit?: (item: PublicItem) => void;
+  onDelete?: (itemId: string) => void;
 }
 
-const ItemTable: React.FC<ItemTableProps> = ({ items }) => (
+const ItemTable: React.FC<ItemTableProps> = ({ items, onEdit, onDelete }) => (
   <div className="overflow-x-auto">
     <table className="min-w-full bg-white border border-gray-200 rounded-md shadow-md">
       <thead className="bg-gray-100">
@@ -24,7 +26,12 @@ const ItemTable: React.FC<ItemTableProps> = ({ items }) => (
       </thead>
       <tbody>
         {items.map((item) => (
-          <ItemRow key={item.public_item_id} item={item} />
+          <ItemRow 
+            key={item.public_item_id} 
+            item={item} 
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
         ))}
       </tbody>
     </table>
