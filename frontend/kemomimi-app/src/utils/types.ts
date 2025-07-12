@@ -40,13 +40,13 @@ export interface ProductEntry {
   remarks?: string;
 }
 
-interface Category {
+export interface Category {
   category_id: string;  // カテゴリのユニークID
   name: string;        // カテゴリ名 
   remarks?: string;    // 備考欄
 }
 
-interface User {
+export interface User {
   user_id: string;     // ユーザーID
   screen_name: string; // ユーザー名
   handle_name: string; // ハンドルネーム
