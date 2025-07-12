@@ -1,101 +1,136 @@
+import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="min-h-screen bg-gray-100">
+      <div className="container mx-auto p-4">
+        {/* ヘッダー */}
+        <div className="bg-gray-800 text-white text-center text-4xl tracking-wider rounded p-2 mb-6">
+          <div className="flex items-center justify-center gap-4">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/logo.png"
+              alt="KEMOMIMI Logo"
+              width={400}
+              height={80}
+              className="h-16 w-auto"
+              priority
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* ナビゲーション */}
+        <div className="bg-white rounded shadow-sm border p-4 mb-6">
+          <nav className="flex gap-6 justify-center">
+            <Link 
+              href="/public-items" 
+              className="text-gray-700 hover:text-blue-600 font-medium px-4 py-2 rounded hover:bg-gray-50 transition-colors"
+            >
+              備品一覧
+            </Link>
+            <Link 
+              href="/categories" 
+              className="text-gray-700 hover:text-blue-600 font-medium px-4 py-2 rounded hover:bg-gray-50 transition-colors"
+            >
+              カテゴリ管理
+            </Link>
+          </nav>
+        </div>
+
+        {/* メインコンテンツ */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* 備品管理セクション */}
+          <div className="bg-white rounded shadow-sm border p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">備品管理</h2>
+            <p className="text-gray-600 mb-4 text-sm">
+              組織の備品を効率的に管理するためのシステムです。
+            </p>
+            <div className="space-y-3">
+              <Link 
+                href="/public-items"
+                className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded text-center transition-colors"
+              >
+                備品一覧を見る
+              </Link>
+              <Link 
+                href="/categories"
+                className="block w-full bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded text-center transition-colors"
+              >
+                カテゴリ管理
+              </Link>
+            </div>
+          </div>
+
+          {/* システム情報 */}
+          <div className="bg-white rounded shadow-sm border p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">システム情報</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between py-2 border-b border-gray-200">
+                <span className="text-gray-600">バージョン</span>
+                <span className="font-medium">v1.0.0</span>
+              </div>
+              <div className="flex justify-between py-2 border-b border-gray-200">
+                <span className="text-gray-600">最終更新</span>
+                <span className="font-medium">2025/07/12</span>
+              </div>
+              <div className="flex justify-between py-2">
+                <span className="text-gray-600">ステータス</span>
+                <span className="font-medium text-green-600">稼働中</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 機能一覧 */}
+        <div className="bg-white rounded shadow-sm border p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">主な機能</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="p-4 border border-gray-200 rounded">
+              <h3 className="font-semibold text-gray-800 mb-2">備品登録・管理</h3>
+              <p className="text-gray-600 text-sm">備品情報の登録、編集、削除が可能です。</p>
+            </div>
+            <div className="p-4 border border-gray-200 rounded">
+              <h3 className="font-semibold text-gray-800 mb-2">検索・フィルタ</h3>
+              <p className="text-gray-600 text-sm">カテゴリやキーワードで備品を検索できます。</p>
+            </div>
+            <div className="p-4 border border-gray-200 rounded">
+              <h3 className="font-semibold text-gray-800 mb-2">履歴管理</h3>
+              <p className="text-gray-600 text-sm">操作履歴を記録・確認できます。</p>
+            </div>
+          </div>
+        </div>
+
+        {/* クイックアクセス */}
+        <div className="bg-white rounded shadow-sm border p-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">クイックアクセス</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Link 
+              href="/public-items"
+              className="border border-gray-300 hover:border-blue-500 p-3 rounded text-center transition-colors"
+            >
+              <div className="text-2xl mb-1">📋</div>
+              <div className="text-sm font-medium">全備品</div>
+            </Link>
+            <Link 
+              href="/categories"
+              className="border border-gray-300 hover:border-blue-500 p-3 rounded text-center transition-colors"
+            >
+              <div className="text-2xl mb-1">📁</div>
+              <div className="text-sm font-medium">カテゴリ</div>
+            </Link>
+            <div className="border border-gray-200 p-3 rounded text-center text-gray-400 cursor-not-allowed">
+              <div className="text-2xl mb-1">➕</div>
+              <div className="text-sm font-medium">新規登録</div>
+              <div className="text-xs">準備中</div>
+            </div>
+            <div className="border border-gray-200 p-3 rounded text-center text-gray-400 cursor-not-allowed">
+              <div className="text-2xl mb-1">📈</div>
+              <div className="text-sm font-medium">統計</div>
+              <div className="text-xs">準備中</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
