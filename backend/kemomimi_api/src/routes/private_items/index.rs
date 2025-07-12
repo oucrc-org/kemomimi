@@ -9,7 +9,7 @@ use openapi::{
     models,
 };
 
-use crate::libs::ApiImpl;
+use crate::app::ApiImpl;
 impl PrivateItems for ApiImpl {
     #[doc = " 私物一覧取得."]
     #[doc = ""]

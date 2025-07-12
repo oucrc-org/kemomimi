@@ -1,4 +1,4 @@
-use crate::libs::ApiImpl;
+use crate::app::ApiImpl;
 use axum::{async_trait, extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use chrono::Utc;
@@ -333,7 +333,7 @@ impl PublicItems for ApiImpl {
             name: product.name,
             model_number: product.model_number,
             product_url: product.product_url,
-            categories: Some(product_categories), // 
+            categories: Some(product_categories), //
             main_users: Some(vec![]),             // Todo: 現時点では空
             remarks: product.remarks,
         };

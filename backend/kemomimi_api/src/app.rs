@@ -19,11 +19,6 @@ use tower_http::{
 use tracing::{info, info_span, Level, Span};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-mod libs;
-use libs::ApiImpl;
-
-mod routes;
-
 pub async fn app() -> Router {
     // ログ収集の有効化
     tracing_subscriber::fmt()
@@ -46,4 +41,9 @@ impl AsRef<ApiImpl> for ApiImpl {
     fn as_ref(&self) -> &ApiImpl {
         self
     }
+}
+
+#[derive(Clone, Debug)]
+pub struct ApiImpl {
+    pub db_pool: Arc<Pool<Postgres>>,
 }
