@@ -1,4 +1,4 @@
-import type { PublicItem, Product, PublicItemEntry, ProductEntry } from './types';
+import type { PublicItem, Product, PublicItemEntry, ProductEntry, Category } from './types';
 
 interface FetchPublicItemsParams {
   sort?: 'public_item_id' | 'cost' | 'approval_date';
@@ -41,7 +41,7 @@ export const fetchProducts = async (params?: FetchProductsParams): Promise<Produ
 };
 
 // カテゴリ取得
-export const fetchCategories = async (): Promise<any[]> => {
+export const fetchCategories = async (): Promise<Category[]> => {
   const endpoint = USE_MOCK_API 
     ? `${API_BASE_URL}/categories-api`
     : `${API_BASE_URL}/categories`;
