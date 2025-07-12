@@ -10,6 +10,8 @@ use tower_http::{
 };
 use tracing::Level;
 
+pub mod routes;
+
 #[derive(Clone, Debug)]
 pub struct AppState {
     pub db_pool: Arc<Pool<Postgres>>,
