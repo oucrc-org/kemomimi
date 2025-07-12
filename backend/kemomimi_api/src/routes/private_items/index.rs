@@ -9,7 +9,7 @@ use openapi::{
     models,
 };
 
-use crate::AppState;
+use crate::app::AppState;
 impl PrivateItems for AppState {
     #[doc = " 私物一覧取得."]
     #[doc = ""]
