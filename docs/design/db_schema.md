@@ -46,7 +46,7 @@
 
 | 名前         | データ型 | 制約        | 説明                         |
 | ------------ | -------- | ----------- | ---------------------------- |
-| `treat_id`   | UUID     | PRIMARY KEY | 処理のユニークID             |
+| `treat_id`   | TEXT     | PRIMARY KEY | 処理のユニークID             |
 | `treat_name` | TEXT     | NOT NULL    | 処理名（未定や回収、寄付等） |
 
 ## 製品 (Product)
@@ -157,6 +157,6 @@
 
 | 名前                         | データ型 | 制約             | 説明                      |
 | ---------------------------- | -------- | ---------------- | ------------------------- |
-| `purchase_request_status_id` | UUID     | PRIMARY KEY      | 状態のユニークID          |
+| `purchase_request_status_id` | TEXT     | PRIMARY KEY      | 状態のユニークID          |
 | `status_name`                | TEXT     | UNIQUE, NOT NULL | 状態名（例: Pendingなど） |
 | `remarks`                    | TEXT     |                  | 備考欄                    |

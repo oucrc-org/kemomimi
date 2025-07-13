@@ -1,7 +1,7 @@
 -- Add up migration script here
 CREATE TABLE
     post_grad_treat (
-        treat_id UUID PRIMARY KEY, -- 処理のユニークID
+        treat_id TEXT PRIMARY KEY, -- 処理のユニークID
         treat_name TEXT NOT NULL -- 処理名（未定や回収、寄付等）
     );
 
@@ -22,7 +22,7 @@ CREATE TABLE
         private_item_id UUID PRIMARY KEY, -- 私物のユニークID
         name TEXT NOT NULL, -- 製品名
         owner_id UUID REFERENCES member (user_id), -- 所有者（Userへの外部キー）
-        post_grad_treat_id UUID REFERENCES post_grad_treat (treat_id), -- 卒業後の処理（PostGradTreatへの外部キー）
+        post_grad_treat_id TEXT REFERENCES post_grad_treat (treat_id), -- 卒業後の処理（PostGradTreatへの外部キー）
         model_number TEXT, -- 型番
         is_remaining BOOLEAN DEFAULT TRUE NOT NULL, -- 存しているか(廃棄済みや失効済みならFALSE)
         remarks TEXT -- 備考
@@ -46,7 +46,7 @@ CREATE TABLE
 
 CREATE TABLE
     purchase_request (
-        purchase_request_id UUID PRIMARY KEY, -- 申請のユニークID                                                            
+        purchase_request_id TEXT PRIMARY KEY, -- 申請のユニークID                                                            
         applicant_id UUID REFERENCES member (user_id), -- 申請者のID（Userへの外部キー）                                              
         product_id UUID REFERENCES product (product_id), -- 申請する製品のID                                                            
         cost INT CHECK (cost >= 0), -- 申請時の想定費用                                                            
@@ -58,4 +58,4 @@ CREATE TABLE
 
 
 ALTER TABLE public_item
-    ADD COLUMN purchase_request_id UUID REFERENCES purchase_request (purchase_request_id);
+    ADD COLUMN purchase_request_id TEXT REFERENCES purchase_request (purchase_request_id);
