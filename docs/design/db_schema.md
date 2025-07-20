@@ -93,7 +93,7 @@
 | `category_id` | TEXT                          | FOREIGN KEY | カテゴリのID（Categoryへの外部キー） |
 | PRIMARY KEY   | (`product_id`, `category_id`) |             |
 
-## 部員 (User)
+## 部員 (member)
 
 ### 説明
 

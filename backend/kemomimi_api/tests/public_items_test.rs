@@ -1,36 +1,31 @@
-use std::borrow::BorrowMut;
-
 use axum::{
-    body::Body,
+    body::{self, Body},
     http::{header, Request, StatusCode},
 };
-use futures_channel::oneshot;
-use kemomimi_api::{self, app};
-use serde_json::{json, to_string};
-use sqlx::PgPool;
-use tower::ServiceExt;
+use tower::util::ServiceExt;
 
-use openapi::{
-    self,
-    models::{PublicItem, PublicItemEntry},
-};
-// fn test_public_items(db: PgPool) {
+use kemomimi_api::app;
+use tracing::info;
+
 #[sqlx::test]
 fn test_public_items() {
-    let mut app = app().await;
+    let app = app().await;
 
     let req = Request::builder()
         .method("GET")
-        .uri("http://localhost:3030/public-items")
+        .header(header::HOST, "localhost:3030")
+        .uri("http://localhost:3030/public-items?")
         .body(Body::empty())
         .unwrap(); // buildの結果のエラーはunwrapで処理
 
     // リクエストを送信
     let resp = app.oneshot(req).await.unwrap();
 
-    println!("{:?}", resp);
     assert_eq!(resp.status(), StatusCode::OK);
-
+    info!("this is resp {:?}", resp);
+    let body = body::to_bytes(resp.into_body(), usize::MAX).await.unwrap();
+    let body = String::from_utf8_lossy(&body);
+    info!("body: {}", body);
     // let pb1 = PublicItemEntry {
     //     name: "KEMOMIMI".to_string(),
     //     cost: Some(100),

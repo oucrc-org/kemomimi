@@ -1,4 +1,4 @@
-use crate::libs::ApiImpl;
+use crate::AppState;
 use axum::{async_trait, extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use chrono::Utc;
@@ -60,16 +60,12 @@ struct ProductCategoryRaw {
 }
 
 #[async_trait]
-impl PublicItems for ApiImpl {
+impl PublicItems for AppState {
     #[doc = " 備品一覧取得."]
     #[doc = ""]
     #[doc = " PublicItemsGet - GET /public-items"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     #[tracing::instrument]
     async fn public_items_get<'life0>(
         &'life0 self,
@@ -174,11 +170,7 @@ impl PublicItems for ApiImpl {
     #[doc = ""]
     #[doc = " PublicItemsPost - POST /public-items"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_post<'life0>(
         &'life0 self,
         _method: Method,
@@ -333,7 +325,7 @@ impl PublicItems for ApiImpl {
             name: product.name,
             model_number: product.model_number,
             product_url: product.product_url,
-            categories: Some(product_categories), // 
+            categories: Some(product_categories), //
             main_users: Some(vec![]),             // Todo: 現時点では空
             remarks: product.remarks,
         };
@@ -358,11 +350,7 @@ impl PublicItems for ApiImpl {
     #[doc = ""]
     #[doc = " PublicItemsPublicItemIdDelete - DELETE /public-items/{public-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_public_item_id_delete<'life0>(
         &'life0 self,
         method: Method,
@@ -381,11 +369,7 @@ impl PublicItems for ApiImpl {
     #[doc = ""]
     #[doc = " PublicItemsPublicItemIdGet - GET /public-items/{public-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_public_item_id_get<'life0>(
         &'life0 self,
         method: Method,
@@ -404,11 +388,7 @@ impl PublicItems for ApiImpl {
     #[doc = ""]
     #[doc = " PublicItemsPublicItemIdPut - PUT /public-items/{public-item-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     async fn public_items_public_item_id_put<'life0>(
         &'life0 self,
         method: Method,

@@ -1,4 +1,4 @@
-use crate::libs::ApiImpl;
+use crate::AppState;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,16 +8,12 @@ use openapi::{
     },
     models,
 };
-impl Products for ApiImpl {
+impl Products for AppState {
     #[doc = " 製品一覧取得."]
     #[doc = ""]
     #[doc = " ProductsGet - GET /products"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -41,11 +37,7 @@ impl Products for ApiImpl {
     #[doc = ""]
     #[doc = " ProductsPost - POST /products"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_post<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -70,11 +62,7 @@ impl Products for ApiImpl {
     #[doc = ""]
     #[doc = " ProductsProductIdDelete - DELETE /products/{product-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_product_id_delete<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -99,11 +87,7 @@ impl Products for ApiImpl {
     #[doc = ""]
     #[doc = " ProductsProductIdGet - GET /products/{product-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_product_id_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -128,11 +112,7 @@ impl Products for ApiImpl {
     #[doc = ""]
     #[doc = " ProductsProductIdPut - PUT /products/{product-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn products_product_id_put<'life0, 'async_trait>(
         &'life0 self,
         method: Method,

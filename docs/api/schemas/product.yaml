@@ -17,10 +17,6 @@ properties:
     type: array
     items:
       $ref: "./category.yaml"
-  main_users:
-    type: array
-    items:
-      $ref: "./user.yaml"
   remarks:
     type: string
     description: 備考欄
