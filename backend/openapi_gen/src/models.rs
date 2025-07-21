@@ -582,10 +582,6 @@ pub struct Product {
     #[serde(skip_serializing_if="Option::is_none")]
     pub categories: Option<Vec<models::Category>>,
 
-    #[serde(rename = "main_users")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub main_users: Option<Vec<models::User>>,
-
 /// 備考欄
     #[serde(rename = "remarks")]
     #[serde(skip_serializing_if="Option::is_none")]
@@ -603,7 +599,6 @@ impl Product {
             model_number: None,
             product_url: None,
             categories: None,
-            main_users: None,
             remarks: None,
         }
     }
@@ -639,8 +634,6 @@ impl std::fmt::Display for Product {
 
             // Skipping categories in query parameter serialization
 
-            // Skipping main_users in query parameter serialization
-
 
             self.remarks.as_ref().map(|remarks| {
                 [
@@ -671,7 +664,6 @@ impl std::str::FromStr for Product {
             pub model_number: Vec<String>,
             pub product_url: Vec<String>,
             pub categories: Vec<Vec<models::Category>>,
-            pub main_users: Vec<Vec<models::User>>,
             pub remarks: Vec<String>,
         }
 
@@ -699,7 +691,6 @@ impl std::str::FromStr for Product {
                     #[allow(clippy::redundant_clone)]
                     "product_url" => intermediate_rep.product_url.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     "categories" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
-                    "main_users" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
                     #[allow(clippy::redundant_clone)]
                     "remarks" => intermediate_rep.remarks.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     _ => return std::result::Result::Err("Unexpected key while parsing Product".to_string())
@@ -717,7 +708,6 @@ impl std::str::FromStr for Product {
             model_number: intermediate_rep.model_number.into_iter().next(),
             product_url: intermediate_rep.product_url.into_iter().next(),
             categories: intermediate_rep.categories.into_iter().next(),
-            main_users: intermediate_rep.main_users.into_iter().next(),
             remarks: intermediate_rep.remarks.into_iter().next(),
         })
     }
@@ -1253,7 +1243,7 @@ pub struct PublicItemEntry {
 /// 追加元の購入申請ID
     #[serde(rename = "purchase_request_id")]
     #[serde(skip_serializing_if="Option::is_none")]
-    pub purchase_request_id: Option<uuid::Uuid>,
+    pub purchase_request_id: Option<String>,
 
 /// 備考欄
     #[serde(rename = "remarks")]
@@ -1311,7 +1301,13 @@ impl std::fmt::Display for PublicItemEntry {
                 ].join(",")
             }),
 
-            // Skipping purchase_request_id in query parameter serialization
+
+            self.purchase_request_id.as_ref().map(|purchase_request_id| {
+                [
+                    "purchase_request_id".to_string(),
+                    purchase_request_id.to_string(),
+                ].join(",")
+            }),
 
 
             self.remarks.as_ref().map(|remarks| {
@@ -1344,7 +1340,7 @@ impl std::str::FromStr for PublicItemEntry {
             pub purchase_date: Vec<chrono::naive::NaiveDate>,
             pub expiration_date: Vec<chrono::naive::NaiveDate>,
             pub is_remaining: Vec<bool>,
-            pub purchase_request_id: Vec<uuid::Uuid>,
+            pub purchase_request_id: Vec<String>,
             pub remarks: Vec<String>,
         }
 
@@ -1376,7 +1372,7 @@ impl std::str::FromStr for PublicItemEntry {
                     #[allow(clippy::redundant_clone)]
                     "is_remaining" => intermediate_rep.is_remaining.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
-                    "purchase_request_id" => intermediate_rep.purchase_request_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "purchase_request_id" => intermediate_rep.purchase_request_id.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "remarks" => intermediate_rep.remarks.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     _ => return std::result::Result::Err("Unexpected key while parsing PublicItemEntry".to_string())
