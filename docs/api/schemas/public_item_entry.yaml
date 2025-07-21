@@ -23,7 +23,7 @@ properties:
     description: 現存しているか(NULLなら現存)
   purchase_request_id:
     type: string
-    format: uuid
+    format: string
     description: 追加元の購入申請ID
   remarks:
     type: string

@@ -618,7 +618,7 @@ components:
           description: 現存しているか(NULLなら現存)
         purchase_request_id:
           type: string
-          format: uuid
+          format: string
           description: 追加元の購入申請ID
         remarks:
           type: string
@@ -711,10 +711,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Category'
-        main_users:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
         remarks:
           type: string
           description: 備考欄
