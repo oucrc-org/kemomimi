@@ -2,6 +2,7 @@ type: object
 properties:
   product_id:
     type: string
+    format: uuid
     description: 製品のユニークID
   name:
     type: string
@@ -12,14 +13,10 @@ properties:
   product_url:
     type: string
     description: 商品のURL
-  categiries:
+  categories:
     type: array
     items:
       $ref: "./category.yaml"
-  main_users:
-    type: array
-    items:
-      $ref: "./user.yaml"
   remarks:
     type: string
     description: 備考欄

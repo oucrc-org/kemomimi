@@ -2,6 +2,7 @@ type: object
 properties:
   public_item_id:
     type: string
+    format: uuid
     description: 備品のユニークID
   name:
     type: string

@@ -1,4 +1,4 @@
-use crate::libs::ApiImpl;
+use crate::AppState;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,16 +8,12 @@ use openapi::{
     },
     models,
 };
-impl Users for ApiImpl {
+impl Users for AppState {
     #[doc = " 部員一覧取得."]
     #[doc = ""]
     #[doc = " UsersGet - GET /users"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn users_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -41,11 +37,7 @@ impl Users for ApiImpl {
     #[doc = ""]
     #[doc = " UsersPost - POST /users"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn users_post<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -70,11 +62,7 @@ impl Users for ApiImpl {
     #[doc = ""]
     #[doc = " UsersUserIdDelete - DELETE /users-{user_id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn users_user_id_delete<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -99,11 +87,7 @@ impl Users for ApiImpl {
     #[doc = ""]
     #[doc = " UsersUserIdGet - GET /users-{user_id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn users_user_id_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -128,11 +112,7 @@ impl Users for ApiImpl {
     #[doc = ""]
     #[doc = " UsersUserIdPut - PUT /users-{user_id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn users_user_id_put<'life0, 'async_trait>(
         &'life0 self,
         method: Method,

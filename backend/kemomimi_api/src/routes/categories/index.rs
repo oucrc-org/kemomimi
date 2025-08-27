@@ -1,4 +1,4 @@
-use crate::libs::ApiImpl;
+use crate::AppState;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,16 +8,12 @@ use openapi::{
     },
     models,
 };
-impl Categories for ApiImpl {
+impl Categories for AppState {
     #[doc = " カテゴリ削除."]
     #[doc = ""]
     #[doc = " CategoriesCategoryIdDelete - DELETE /categories/{category-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn categories_category_id_delete<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -43,11 +39,7 @@ impl Categories for ApiImpl {
     #[doc = ""]
     #[doc = " CategoriesCategoryIdGet - GET /categories/{category-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn categories_category_id_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -72,11 +64,7 @@ impl Categories for ApiImpl {
     #[doc = ""]
     #[doc = " CategoriesCategoryIdPut - PUT /categories/{category-id}"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn categories_category_id_put<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -102,11 +90,7 @@ impl Categories for ApiImpl {
     #[doc = ""]
     #[doc = " CategoriesGet - GET /categories"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn categories_get<'life0, 'async_trait>(
         &'life0 self,
         method: Method,
@@ -130,11 +114,7 @@ impl Categories for ApiImpl {
     #[doc = ""]
     #[doc = " CategoriesPost - POST /categories"]
     #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
+    #[allow(clippy::type_complexity, clippy::type_repetition_in_bounds)]
     fn categories_post<'life0, 'async_trait>(
         &'life0 self,
         method: Method,

@@ -562,7 +562,7 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<PrivateItem>
 pub struct Product {
 /// 製品のユニークID
     #[serde(rename = "product_id")]
-    pub product_id: String,
+    pub product_id: uuid::Uuid,
 
 /// 製品名
     #[serde(rename = "name")]
@@ -578,13 +578,9 @@ pub struct Product {
     #[serde(skip_serializing_if="Option::is_none")]
     pub product_url: Option<String>,
 
-    #[serde(rename = "categiries")]
+    #[serde(rename = "categories")]
     #[serde(skip_serializing_if="Option::is_none")]
-    pub categiries: Option<Vec<models::Category>>,
-
-    #[serde(rename = "main_users")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub main_users: Option<Vec<models::User>>,
+    pub categories: Option<Vec<models::Category>>,
 
 /// 備考欄
     #[serde(rename = "remarks")]
@@ -596,14 +592,13 @@ pub struct Product {
 
 impl Product {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(product_id: String, name: String, ) -> Product {
+    pub fn new(product_id: uuid::Uuid, name: String, ) -> Product {
         Product {
             product_id,
             name,
             model_number: None,
             product_url: None,
-            categiries: None,
-            main_users: None,
+            categories: None,
             remarks: None,
         }
     }
@@ -615,9 +610,7 @@ impl Product {
 impl std::fmt::Display for Product {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let params: Vec<Option<String>> = vec![
-
-            Some("product_id".to_string()),
-            Some(self.product_id.to_string()),
+            // Skipping product_id in query parameter serialization
 
 
             Some("name".to_string()),
@@ -639,9 +632,7 @@ impl std::fmt::Display for Product {
                 ].join(",")
             }),
 
-            // Skipping categiries in query parameter serialization
-
-            // Skipping main_users in query parameter serialization
+            // Skipping categories in query parameter serialization
 
 
             self.remarks.as_ref().map(|remarks| {
@@ -668,12 +659,11 @@ impl std::str::FromStr for Product {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub product_id: Vec<String>,
+            pub product_id: Vec<uuid::Uuid>,
             pub name: Vec<String>,
             pub model_number: Vec<String>,
             pub product_url: Vec<String>,
-            pub categiries: Vec<Vec<models::Category>>,
-            pub main_users: Vec<Vec<models::User>>,
+            pub categories: Vec<Vec<models::Category>>,
             pub remarks: Vec<String>,
         }
 
@@ -693,15 +683,14 @@ impl std::str::FromStr for Product {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "product_id" => intermediate_rep.product_id.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "product_id" => intermediate_rep.product_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "model_number" => intermediate_rep.model_number.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "product_url" => intermediate_rep.product_url.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    "categiries" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
-                    "main_users" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
+                    "categories" => return std::result::Result::Err("Parsing a container in this style is not supported in Product".to_string()),
                     #[allow(clippy::redundant_clone)]
                     "remarks" => intermediate_rep.remarks.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     _ => return std::result::Result::Err("Unexpected key while parsing Product".to_string())
@@ -718,8 +707,7 @@ impl std::str::FromStr for Product {
             name: intermediate_rep.name.into_iter().next().ok_or_else(|| "name missing in Product".to_string())?,
             model_number: intermediate_rep.model_number.into_iter().next(),
             product_url: intermediate_rep.product_url.into_iter().next(),
-            categiries: intermediate_rep.categiries.into_iter().next(),
-            main_users: intermediate_rep.main_users.into_iter().next(),
+            categories: intermediate_rep.categories.into_iter().next(),
             remarks: intermediate_rep.remarks.into_iter().next(),
         })
     }
@@ -771,7 +759,7 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<Product> {
 pub struct PublicItem {
 /// 備品のユニークID
     #[serde(rename = "public_item_id")]
-    pub public_item_id: String,
+    pub public_item_id: uuid::Uuid,
 
 /// 備品名
     #[serde(rename = "name")]
@@ -814,7 +802,7 @@ pub struct PublicItem {
 
 impl PublicItem {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(public_item_id: String, name: String, is_remaining: bool, ) -> PublicItem {
+    pub fn new(public_item_id: uuid::Uuid, name: String, is_remaining: bool, ) -> PublicItem {
         PublicItem {
             public_item_id,
             name,
@@ -835,9 +823,7 @@ impl PublicItem {
 impl std::fmt::Display for PublicItem {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let params: Vec<Option<String>> = vec![
-
-            Some("public_item_id".to_string()),
-            Some(self.public_item_id.to_string()),
+            // Skipping public_item_id in query parameter serialization
 
 
             Some("name".to_string()),
@@ -888,7 +874,7 @@ impl std::str::FromStr for PublicItem {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub public_item_id: Vec<String>,
+            pub public_item_id: Vec<uuid::Uuid>,
             pub name: Vec<String>,
             pub category: Vec<models::Category>,
             pub cost: Vec<i32>,
@@ -915,7 +901,7 @@ impl std::str::FromStr for PublicItem {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "public_item_id" => intermediate_rep.public_item_id.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "public_item_id" => intermediate_rep.public_item_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
@@ -1001,16 +987,14 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<PublicItem> 
 pub struct PublicItemDetails {
 /// 備品のユニークID
     #[serde(rename = "public_item_id")]
-    pub public_item_id: String,
+    pub public_item_id: uuid::Uuid,
 
 /// 備品名
     #[serde(rename = "name")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub name: Option<String>,
+    pub name: String,
 
     #[serde(rename = "product")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub product: Option<models::Product>,
+    pub product: models::Product,
 
 /// 備品の購入コスト
     #[serde(rename = "cost")]
@@ -1019,8 +1003,7 @@ pub struct PublicItemDetails {
 
 /// 導入日
     #[serde(rename = "purchase_date")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub purchase_date: Option<chrono::naive::NaiveDate>,
+    pub purchase_date: chrono::naive::NaiveDate,
 
 /// 耐用期限
     #[serde(rename = "expiration_date")]
@@ -1029,13 +1012,12 @@ pub struct PublicItemDetails {
 
 /// 現存しているか
     #[serde(rename = "is_remaining")]
-    #[serde(skip_serializing_if="Option::is_none")]
-    pub is_remaining: Option<bool>,
+    pub is_remaining: bool,
 
 /// 追加元の購入申請ID
     #[serde(rename = "purchase_request_id")]
     #[serde(skip_serializing_if="Option::is_none")]
-    pub purchase_request_id: Option<String>,
+    pub purchase_request_id: Option<uuid::Uuid>,
 
 /// 備考欄
     #[serde(rename = "remarks")]
@@ -1047,15 +1029,15 @@ pub struct PublicItemDetails {
 
 impl PublicItemDetails {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(public_item_id: String, ) -> PublicItemDetails {
+    pub fn new(public_item_id: uuid::Uuid, name: String, product: models::Product, purchase_date: chrono::naive::NaiveDate, is_remaining: bool, ) -> PublicItemDetails {
         PublicItemDetails {
             public_item_id,
-            name: None,
-            product: None,
+            name,
+            product,
             cost: None,
-            purchase_date: None,
+            purchase_date,
             expiration_date: None,
-            is_remaining: None,
+            is_remaining,
             purchase_request_id: None,
             remarks: None,
         }
@@ -1068,17 +1050,11 @@ impl PublicItemDetails {
 impl std::fmt::Display for PublicItemDetails {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let params: Vec<Option<String>> = vec![
-
-            Some("public_item_id".to_string()),
-            Some(self.public_item_id.to_string()),
+            // Skipping public_item_id in query parameter serialization
 
 
-            self.name.as_ref().map(|name| {
-                [
-                    "name".to_string(),
-                    name.to_string(),
-                ].join(",")
-            }),
+            Some("name".to_string()),
+            Some(self.name.to_string()),
 
             // Skipping product in query parameter serialization
 
@@ -1095,20 +1071,10 @@ impl std::fmt::Display for PublicItemDetails {
             // Skipping expiration_date in query parameter serialization
 
 
-            self.is_remaining.as_ref().map(|is_remaining| {
-                [
-                    "is_remaining".to_string(),
-                    is_remaining.to_string(),
-                ].join(",")
-            }),
+            Some("is_remaining".to_string()),
+            Some(self.is_remaining.to_string()),
 
-
-            self.purchase_request_id.as_ref().map(|purchase_request_id| {
-                [
-                    "purchase_request_id".to_string(),
-                    purchase_request_id.to_string(),
-                ].join(",")
-            }),
+            // Skipping purchase_request_id in query parameter serialization
 
 
             self.remarks.as_ref().map(|remarks| {
@@ -1135,14 +1101,14 @@ impl std::str::FromStr for PublicItemDetails {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub public_item_id: Vec<String>,
+            pub public_item_id: Vec<uuid::Uuid>,
             pub name: Vec<String>,
             pub product: Vec<models::Product>,
             pub cost: Vec<i32>,
             pub purchase_date: Vec<chrono::naive::NaiveDate>,
             pub expiration_date: Vec<chrono::naive::NaiveDate>,
             pub is_remaining: Vec<bool>,
-            pub purchase_request_id: Vec<String>,
+            pub purchase_request_id: Vec<uuid::Uuid>,
             pub remarks: Vec<String>,
         }
 
@@ -1162,7 +1128,7 @@ impl std::str::FromStr for PublicItemDetails {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "public_item_id" => intermediate_rep.public_item_id.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "public_item_id" => intermediate_rep.public_item_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
@@ -1176,7 +1142,7 @@ impl std::str::FromStr for PublicItemDetails {
                     #[allow(clippy::redundant_clone)]
                     "is_remaining" => intermediate_rep.is_remaining.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
-                    "purchase_request_id" => intermediate_rep.purchase_request_id.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "purchase_request_id" => intermediate_rep.purchase_request_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "remarks" => intermediate_rep.remarks.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     _ => return std::result::Result::Err("Unexpected key while parsing PublicItemDetails".to_string())
@@ -1190,12 +1156,12 @@ impl std::str::FromStr for PublicItemDetails {
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(PublicItemDetails {
             public_item_id: intermediate_rep.public_item_id.into_iter().next().ok_or_else(|| "public_item_id missing in PublicItemDetails".to_string())?,
-            name: intermediate_rep.name.into_iter().next(),
-            product: intermediate_rep.product.into_iter().next(),
+            name: intermediate_rep.name.into_iter().next().ok_or_else(|| "name missing in PublicItemDetails".to_string())?,
+            product: intermediate_rep.product.into_iter().next().ok_or_else(|| "product missing in PublicItemDetails".to_string())?,
             cost: intermediate_rep.cost.into_iter().next(),
-            purchase_date: intermediate_rep.purchase_date.into_iter().next(),
+            purchase_date: intermediate_rep.purchase_date.into_iter().next().ok_or_else(|| "purchase_date missing in PublicItemDetails".to_string())?,
             expiration_date: intermediate_rep.expiration_date.into_iter().next(),
-            is_remaining: intermediate_rep.is_remaining.into_iter().next(),
+            is_remaining: intermediate_rep.is_remaining.into_iter().next().ok_or_else(|| "is_remaining missing in PublicItemDetails".to_string())?,
             purchase_request_id: intermediate_rep.purchase_request_id.into_iter().next(),
             remarks: intermediate_rep.remarks.into_iter().next(),
         })
@@ -1250,6 +1216,10 @@ pub struct PublicItemEntry {
     #[serde(rename = "name")]
     pub name: String,
 
+/// 製品ID
+    #[serde(rename = "product_id")]
+    pub product_id: uuid::Uuid,
+
 /// 備品の購入コスト(NULLなら申請から)
     #[serde(rename = "cost")]
     #[serde(skip_serializing_if="Option::is_none")]
@@ -1272,7 +1242,8 @@ pub struct PublicItemEntry {
 
 /// 追加元の購入申請ID
     #[serde(rename = "purchase_request_id")]
-    pub purchase_request_id: String,
+    #[serde(skip_serializing_if="Option::is_none")]
+    pub purchase_request_id: Option<String>,
 
 /// 備考欄
     #[serde(rename = "remarks")]
@@ -1284,14 +1255,15 @@ pub struct PublicItemEntry {
 
 impl PublicItemEntry {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new(name: String, purchase_request_id: String, ) -> PublicItemEntry {
+    pub fn new(name: String, product_id: uuid::Uuid, ) -> PublicItemEntry {
         PublicItemEntry {
             name,
+            product_id,
             cost: None,
             purchase_date: None,
             expiration_date: None,
             is_remaining: None,
-            purchase_request_id,
+            purchase_request_id: None,
             remarks: None,
         }
     }
@@ -1306,6 +1278,8 @@ impl std::fmt::Display for PublicItemEntry {
 
             Some("name".to_string()),
             Some(self.name.to_string()),
+
+            // Skipping product_id in query parameter serialization
 
 
             self.cost.as_ref().map(|cost| {
@@ -1328,8 +1302,12 @@ impl std::fmt::Display for PublicItemEntry {
             }),
 
 
-            Some("purchase_request_id".to_string()),
-            Some(self.purchase_request_id.to_string()),
+            self.purchase_request_id.as_ref().map(|purchase_request_id| {
+                [
+                    "purchase_request_id".to_string(),
+                    purchase_request_id.to_string(),
+                ].join(",")
+            }),
 
 
             self.remarks.as_ref().map(|remarks| {
@@ -1357,6 +1335,7 @@ impl std::str::FromStr for PublicItemEntry {
         #[allow(dead_code)]
         struct IntermediateRep {
             pub name: Vec<String>,
+            pub product_id: Vec<uuid::Uuid>,
             pub cost: Vec<i32>,
             pub purchase_date: Vec<chrono::naive::NaiveDate>,
             pub expiration_date: Vec<chrono::naive::NaiveDate>,
@@ -1383,6 +1362,8 @@ impl std::str::FromStr for PublicItemEntry {
                     #[allow(clippy::redundant_clone)]
                     "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
+                    "product_id" => intermediate_rep.product_id.push(<uuid::Uuid as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    #[allow(clippy::redundant_clone)]
                     "cost" => intermediate_rep.cost.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "purchase_date" => intermediate_rep.purchase_date.push(<chrono::naive::NaiveDate as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
@@ -1405,11 +1386,12 @@ impl std::str::FromStr for PublicItemEntry {
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(PublicItemEntry {
             name: intermediate_rep.name.into_iter().next().ok_or_else(|| "name missing in PublicItemEntry".to_string())?,
+            product_id: intermediate_rep.product_id.into_iter().next().ok_or_else(|| "product_id missing in PublicItemEntry".to_string())?,
             cost: intermediate_rep.cost.into_iter().next(),
             purchase_date: intermediate_rep.purchase_date.into_iter().next(),
             expiration_date: intermediate_rep.expiration_date.into_iter().next(),
             is_remaining: intermediate_rep.is_remaining.into_iter().next(),
-            purchase_request_id: intermediate_rep.purchase_request_id.into_iter().next().ok_or_else(|| "purchase_request_id missing in PublicItemEntry".to_string())?,
+            purchase_request_id: intermediate_rep.purchase_request_id.into_iter().next(),
             remarks: intermediate_rep.remarks.into_iter().next(),
         })
     }
