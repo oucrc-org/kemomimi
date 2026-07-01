@@ -1,4 +1,5 @@
-use crate::libs::ApiImpl;
+use crate::{db, libs::ApiImpl};
+use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,149 +9,150 @@ use openapi::{
     },
     models,
 };
+use uuid::Uuid;
+
+fn parse_product_id(product_id: &str) -> Uuid {
+    Uuid::parse_str(product_id).unwrap_or_else(|_| Uuid::new_v4())
+}
+
+#[async_trait]
 impl Products for ApiImpl {
-    #[doc = " 製品一覧取得."]
-    #[doc = ""]
-    #[doc = " ProductsGet - GET /products"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn products_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<ProductsGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    async fn products_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+    ) -> Result<ProductsGetResponse, ()> {
+        let rows = db::products::list(&self.db_pool).await.map_err(|_| ())?;
+        let mut products = Vec::with_capacity(rows.len());
+        for row in rows {
+            products.push(db::products::to_model(&self.db_pool, row).await.map_err(|_| ())?);
+        }
+        Ok(ProductsGetResponse::Status200(products))
     }
 
-    #[doc = " 製品新規登録."]
-    #[doc = ""]
-    #[doc = " ProductsPost - POST /products"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn products_post<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn products_post(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         body: models::Product,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<ProductsPostResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<ProductsPostResponse, ()> {
+        if body.name.is_empty() {
+            return Ok(ProductsPostResponse::Status400);
+        }
+
+        let product_id = parse_product_id(&body.product_id);
+        let row = db::products::insert(
+            &self.db_pool,
+            product_id,
+            &body.name,
+            body.model_number.as_deref(),
+            body.product_url.as_deref(),
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        if let Some(categories) = &body.categiries {
+            let category_ids: Vec<String> = categories.iter().map(|c| c.category_id.clone()).collect();
+            db::products::set_categories(&self.db_pool, product_id, &category_ids)
+                .await
+                .map_err(|_| ())?;
+        }
+
+        if let Some(users) = &body.main_users {
+            let user_ids: Vec<String> = users.iter().map(|u| u.user_id.clone()).collect();
+            db::products::set_main_users(&self.db_pool, product_id, &user_ids)
+                .await
+                .map_err(|_| ())?;
+        }
+
+        let product = db::products::to_model(&self.db_pool, row).await.map_err(|_| ())?;
+        Ok(ProductsPostResponse::Status201(product))
     }
 
-    #[doc = " 製品削除."]
-    #[doc = ""]
-    #[doc = " ProductsProductIdDelete - DELETE /products/{product-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn products_product_id_delete<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn products_product_id_delete(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::ProductsProductIdDeletePathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<ProductsProductIdDeleteResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<ProductsProductIdDeleteResponse, ()> {
+        let product_id = Uuid::parse_str(&path_params.product_id).map_err(|_| ())?;
+        let deleted = db::products::delete(&self.db_pool, product_id)
+            .await
+            .map_err(|_| ())?;
+        if deleted {
+            Ok(ProductsProductIdDeleteResponse::Status204)
+        } else {
+            Ok(ProductsProductIdDeleteResponse::Status404)
+        }
     }
 
-    #[doc = " 製品情報取得."]
-    #[doc = ""]
-    #[doc = " ProductsProductIdGet - GET /products/{product-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn products_product_id_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn products_product_id_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::ProductsProductIdGetPathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<ProductsProductIdGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<ProductsProductIdGetResponse, ()> {
+        let product_id = Uuid::parse_str(&path_params.product_id).map_err(|_| ())?;
+        let row = db::products::get(&self.db_pool, product_id)
+            .await
+            .map_err(|_| ())?;
+        match row {
+            Some(row) => {
+                let product = db::products::to_model(&self.db_pool, row).await.map_err(|_| ())?;
+                Ok(ProductsProductIdGetResponse::Status200(product))
+            }
+            None => Ok(ProductsProductIdGetResponse::Status404),
+        }
     }
 
-    #[doc = " 製品情報更新."]
-    #[doc = ""]
-    #[doc = " ProductsProductIdPut - PUT /products/{product-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn products_product_id_put<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn products_product_id_put(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::ProductsProductIdPutPathParams,
         body: models::Product,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<ProductsProductIdPutResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<ProductsProductIdPutResponse, ()> {
+        if body.name.is_empty() {
+            return Ok(ProductsProductIdPutResponse::Status400);
+        }
+
+        let product_id = Uuid::parse_str(&path_params.product_id).map_err(|_| ())?;
+        let row = db::products::update(
+            &self.db_pool,
+            product_id,
+            &body.name,
+            body.model_number.as_deref(),
+            body.product_url.as_deref(),
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        let Some(row) = row else {
+            return Ok(ProductsProductIdPutResponse::Status404);
+        };
+
+        if let Some(categories) = &body.categiries {
+            let category_ids: Vec<String> = categories.iter().map(|c| c.category_id.clone()).collect();
+            db::products::set_categories(&self.db_pool, product_id, &category_ids)
+                .await
+                .map_err(|_| ())?;
+        }
+
+        if let Some(users) = &body.main_users {
+            let user_ids: Vec<String> = users.iter().map(|u| u.user_id.clone()).collect();
+            db::products::set_main_users(&self.db_pool, product_id, &user_ids)
+                .await
+                .map_err(|_| ())?;
+        }
+
+        let product = db::products::to_model(&self.db_pool, row).await.map_err(|_| ())?;
+        Ok(ProductsProductIdPutResponse::Status200(product))
     }
 }
