@@ -7,6 +7,7 @@ use std::env;
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};
 
+mod db;
 mod libs;
 use libs::ApiImpl;
 
