@@ -1,8 +1,5 @@
-use axum::{extract::Host, http::Method, Router};
-use axum_extra::extract::CookieJar;
-use chrono::Utc;
 use openapi::server::new;
-use sqlx::{PgPool, Pool, Postgres};
+use sqlx::PgPool;
 use std::env;
 use std::sync::Arc;
 use tower_http::cors::{Any, CorsLayer};

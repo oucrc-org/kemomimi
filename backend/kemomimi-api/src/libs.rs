@@ -1,6 +1,6 @@
-use sqlx::{PgPool, Pool, Postgres};
+use sqlx::PgPool;
 use std::sync::Arc;
 #[derive(Clone)]
 pub struct ApiImpl {
-    pub db_pool: Arc<Pool<Postgres>>,
+    pub db_pool: Arc<PgPool>,
 }
