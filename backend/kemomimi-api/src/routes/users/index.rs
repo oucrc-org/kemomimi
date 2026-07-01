@@ -1,4 +1,5 @@
-use crate::libs::ApiImpl;
+use crate::{db, libs::ApiImpl};
+use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -8,149 +9,111 @@ use openapi::{
     },
     models,
 };
+
+#[async_trait]
 impl Users for ApiImpl {
-    #[doc = " 部員一覧取得."]
-    #[doc = ""]
-    #[doc = " UsersGet - GET /users"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn users_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<UsersGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    async fn users_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+    ) -> Result<UsersGetResponse, ()> {
+        let rows = db::users::list(&self.db_pool).await.map_err(|_| ())?;
+        Ok(UsersGetResponse::Status200(
+            rows.into_iter().map(db::users::to_model).collect(),
+        ))
     }
 
-    #[doc = " 部員新規登録."]
-    #[doc = ""]
-    #[doc = " UsersPost - POST /users"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn users_post<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn users_post(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         body: models::User,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<UsersPostResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<UsersPostResponse, ()> {
+        if body.user_id.is_empty() || body.handle_name.is_empty() || body.screen_name.is_empty() {
+            return Ok(UsersPostResponse::Status400);
+        }
+
+        let row = db::users::insert(
+            &self.db_pool,
+            &body.user_id,
+            &body.handle_name,
+            &body.screen_name,
+            body.slack_id.as_deref(),
+            body.is_admin.unwrap_or(false),
+            body.is_member.unwrap_or(true),
+            body.graduation_date,
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        Ok(UsersPostResponse::Status201(db::users::to_model(row)))
     }
 
-    #[doc = " 部員削除."]
-    #[doc = ""]
-    #[doc = " UsersUserIdDelete - DELETE /users-{user_id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn users_user_id_delete<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn users_user_id_delete(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::UsersUserIdDeletePathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<UsersUserIdDeleteResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<UsersUserIdDeleteResponse, ()> {
+        let deleted = db::users::delete(&self.db_pool, &path_params.user_id)
+            .await
+            .map_err(|_| ())?;
+        if deleted {
+            Ok(UsersUserIdDeleteResponse::Status204)
+        } else {
+            Ok(UsersUserIdDeleteResponse::Status404)
+        }
     }
 
-    #[doc = " 部員情報取得."]
-    #[doc = ""]
-    #[doc = " UsersUserIdGet - GET /users-{user_id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn users_user_id_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn users_user_id_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::UsersUserIdGetPathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<UsersUserIdGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<UsersUserIdGetResponse, ()> {
+        let row = db::users::get(&self.db_pool, &path_params.user_id)
+            .await
+            .map_err(|_| ())?;
+        match row {
+            Some(row) => Ok(UsersUserIdGetResponse::Status200(db::users::to_model(row))),
+            None => Ok(UsersUserIdGetResponse::Status404),
+        }
     }
 
-    #[doc = " 部員情報更新."]
-    #[doc = ""]
-    #[doc = " UsersUserIdPut - PUT /users-{user_id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn users_user_id_put<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn users_user_id_put(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::UsersUserIdPutPathParams,
         body: models::User,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<UsersUserIdPutResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<UsersUserIdPutResponse, ()> {
+        if body.handle_name.is_empty() || body.screen_name.is_empty() {
+            return Ok(UsersUserIdPutResponse::Status400);
+        }
+
+        let row = db::users::update(
+            &self.db_pool,
+            &path_params.user_id,
+            &body.handle_name,
+            &body.screen_name,
+            body.slack_id.as_deref(),
+            body.is_admin.unwrap_or(false),
+            body.is_member.unwrap_or(true),
+            body.graduation_date,
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        match row {
+            Some(row) => Ok(UsersUserIdPutResponse::Status200(db::users::to_model(row))),
+            None => Ok(UsersUserIdPutResponse::Status404),
+        }
     }
 }

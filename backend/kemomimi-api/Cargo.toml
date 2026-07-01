@@ -3,11 +3,19 @@ name = "kemomimi-api"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "kemomimi_api"
+path = "src/lib.rs"
+
+[[bin]]
+name = "kemomimi-api"
+path = "src/main.rs"
+
 [dependencies]
+async-trait = "0.1"
 axum = "0.7.7"
 axum-extra = { version = "0.9.6", features = ["cookie", "multipart"] }
 chrono = { version = "0.4.39", features = ["now"] }
-chrono-tz = { version = "0.10.0" }
 serde = { version = "1.0", features = ["derive"] }
 tower-http = { version = "0.6.2", features = ["full"] }
 tokio = { version = "1.0", features = ["full"] }
@@ -16,6 +24,15 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 sqlx = { version = "0.6.2", features = [
     "runtime-tokio-native-tls",
     "postgres",
+    "chrono",
+    "uuid",
 ] }
 dotenvy = "0.15.7"
+uuid = { version = "1", features = ["v4"] }
 openapi = { path = "../openapi_gen" }
+
+[dev-dependencies]
+axum = "0.7.7"
+http-body-util = "0.1"
+serde_json = "1"
+tower = { version = "0.5", features = ["util"] }

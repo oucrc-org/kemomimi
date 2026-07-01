@@ -1,4 +1,5 @@
-use crate::libs::ApiImpl;
+use crate::{db, libs::ApiImpl};
+use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use chrono::Utc;
@@ -8,165 +9,158 @@ use openapi::{
         PublicItemsPublicItemIdDeleteResponse, PublicItemsPublicItemIdGetResponse,
         PublicItemsPublicItemIdPutResponse,
     },
-    models::{self, PublicItem},
+    models,
 };
+use uuid::Uuid;
 
+#[async_trait]
 impl PublicItems for ApiImpl {
-    #[doc = " 備品一覧取得."]
-    #[doc = ""]
-    #[doc = " PublicItemsGet - GET /public-items"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn public_items_get<'life0, 'async_trait>(
-        &'life0 self,
+    async fn public_items_get(
+        &self,
         _method: Method,
         _host: Host,
         _cookies: CookieJar,
         query_params: models::PublicItemsGetQueryParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PublicItemsGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        Box::pin(async move {
-            Ok(PublicItemsGetResponse::Status200(vec![PublicItem {
-                public_item_id: "idid".to_string(),
-                name: "KEMOMIMI".to_string(),
-                category: None,
-                cost: Some(1000),
-                approval_date: Some(Utc::now().naive_local().date()),
-                expiration_date: None,
-                is_remaining: true,
-                main_user: None,
-                remarks: None,
-            }]))
-        })
+    ) -> Result<PublicItemsGetResponse, ()> {
+        let rows = db::public_items::list(
+            &self.db_pool,
+            db::public_items::ListParams {
+                search: query_params.search.as_deref(),
+                sort: query_params.sort.as_deref(),
+                filter: query_params.filter.as_deref(),
+                filter_value: None,
+            },
+        )
+        .await
+        .map_err(|_| ())?;
+
+        Ok(PublicItemsGetResponse::Status200(
+            rows.iter().map(db::public_items::to_public_item).collect(),
+        ))
     }
 
-    #[doc = " 備品新規登録."]
-    #[doc = ""]
-    #[doc = " PublicItemsPost - POST /public-items"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn public_items_post<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn public_items_post(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         body: models::PublicItemEntry,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PublicItemsPostResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PublicItemsPostResponse, ()> {
+        if body.name.is_empty() {
+            return Ok(PublicItemsPostResponse::Status400);
+        }
+
+        let product_id = db::products::find_or_create_by_name(&self.db_pool, &body.name)
+            .await
+            .map_err(|_| ())?;
+
+        let public_item_id = Uuid::new_v4();
+        let purchase_date = body.purchase_date.unwrap_or_else(|| Utc::now().date_naive());
+        let is_remaining = body.is_remaining.unwrap_or(true);
+
+        let row = db::public_items::insert(
+            &self.db_pool,
+            public_item_id,
+            product_id,
+            &body.name,
+            body.cost,
+            purchase_date,
+            body.expiration_date,
+            is_remaining,
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        let details = db::public_items::to_details(
+            &self.db_pool,
+            row,
+            Some(body.purchase_request_id),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        Ok(PublicItemsPostResponse::Status201(details))
     }
 
-    #[doc = " 備品削除."]
-    #[doc = ""]
-    #[doc = " PublicItemsPublicItemIdDelete - DELETE /public-items/{public-item-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn public_items_public_item_id_delete<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn public_items_public_item_id_delete(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::PublicItemsPublicItemIdDeletePathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PublicItemsPublicItemIdDeleteResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PublicItemsPublicItemIdDeleteResponse, ()> {
+        let public_item_id =
+            Uuid::parse_str(&path_params.public_item_id).map_err(|_| ())?;
+        let deleted = db::public_items::delete(&self.db_pool, public_item_id)
+            .await
+            .map_err(|_| ())?;
+        if deleted {
+            Ok(PublicItemsPublicItemIdDeleteResponse::Status204)
+        } else {
+            Ok(PublicItemsPublicItemIdDeleteResponse::Status404)
+        }
     }
 
-    #[doc = " 備品情報取得."]
-    #[doc = ""]
-    #[doc = " PublicItemsPublicItemIdGet - GET /public-items/{public-item-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn public_items_public_item_id_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn public_items_public_item_id_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::PublicItemsPublicItemIdGetPathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PublicItemsPublicItemIdGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PublicItemsPublicItemIdGetResponse, ()> {
+        let public_item_id =
+            Uuid::parse_str(&path_params.public_item_id).map_err(|_| ())?;
+        let row = db::public_items::get(&self.db_pool, public_item_id)
+            .await
+            .map_err(|_| ())?;
+        match row {
+            Some(row) => {
+                let details = db::public_items::to_details(&self.db_pool, row, None)
+                    .await
+                    .map_err(|_| ())?;
+                Ok(PublicItemsPublicItemIdGetResponse::Status200(details))
+            }
+            None => Ok(PublicItemsPublicItemIdGetResponse::Status404),
+        }
     }
 
-    #[doc = " 備品情報更新."]
-    #[doc = ""]
-    #[doc = " PublicItemsPublicItemIdPut - PUT /public-items/{public-item-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn public_items_public_item_id_put<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn public_items_public_item_id_put(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::PublicItemsPublicItemIdPutPathParams,
         body: models::PublicItemDetails,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PublicItemsPublicItemIdPutResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PublicItemsPublicItemIdPutResponse, ()> {
+        let public_item_id =
+            Uuid::parse_str(&path_params.public_item_id).map_err(|_| ())?;
+
+        let row = db::public_items::update(
+            &self.db_pool,
+            public_item_id,
+            body.name.as_deref(),
+            body.cost,
+            body.purchase_date,
+            body.expiration_date,
+            body.is_remaining,
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        match row {
+            Some(row) => {
+                let details = db::public_items::to_details(
+                    &self.db_pool,
+                    row,
+                    body.purchase_request_id,
+                )
+                .await
+                .map_err(|_| ())?;
+                Ok(PublicItemsPublicItemIdPutResponse::Status200(details))
+            }
+            None => Ok(PublicItemsPublicItemIdPutResponse::Status404),
+        }
     }
 }

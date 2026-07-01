@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: kemomimi
+      POSTGRES_PASSWORD: kemomimi
+      POSTGRES_DB: kemomimi
+    ports:
+      - "5432:5432"
+    volumes:
+      - kemomimi_pgdata:/var/lib/postgresql/data
+
+volumes:
+  kemomimi_pgdata:
