@@ -1,3 +1,5 @@
+use crate::{db, libs::ApiImpl};
+use async_trait::async_trait;
 use axum::{extract::Host, http::Method};
 use axum_extra::extract::CookieJar;
 use openapi::{
@@ -9,150 +11,109 @@ use openapi::{
     models,
 };
 
-use crate::libs::ApiImpl;
+#[async_trait]
 impl PrivateItems for ApiImpl {
-    #[doc = " 私物一覧取得."]
-    #[doc = ""]
-    #[doc = " PrivateItemsGet - GET /private-items"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn private_items_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PrivateItemsGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    async fn private_items_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
+    ) -> Result<PrivateItemsGetResponse, ()> {
+        let rows = db::private_items::list(&self.db_pool).await.map_err(|_| ())?;
+        Ok(PrivateItemsGetResponse::Status200(
+            rows.into_iter().map(db::private_items::to_model).collect(),
+        ))
     }
 
-    #[doc = " 私物新規登録."]
-    #[doc = ""]
-    #[doc = " PrivateItemsPost - POST /private-items"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn private_items_post<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn private_items_post(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         body: models::PrivateItem,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PrivateItemsPostResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PrivateItemsPostResponse, ()> {
+        if body.private_item_id.is_empty() {
+            return Ok(PrivateItemsPostResponse::Status400);
+        }
+
+        let row = db::private_items::insert(
+            &self.db_pool,
+            &body.private_item_id,
+            body.name.as_deref().unwrap_or(""),
+            body.owner_id.as_deref(),
+            body.post_grad_treat_id.as_deref(),
+            body.model_number.as_deref(),
+            body.is_remaining.unwrap_or(true),
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        Ok(PrivateItemsPostResponse::Status201(db::private_items::to_model(row)))
     }
 
-    #[doc = " 私物削除."]
-    #[doc = ""]
-    #[doc = " PrivateItemsPrivateItemIdDelete - DELETE /private-items/{private-item-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn private_items_private_item_id_delete<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn private_items_private_item_id_delete(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::PrivateItemsPrivateItemIdDeletePathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PrivateItemsPrivateItemIdDeleteResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PrivateItemsPrivateItemIdDeleteResponse, ()> {
+        let deleted =
+            db::private_items::delete(&self.db_pool, &path_params.private_item_id)
+                .await
+                .map_err(|_| ())?;
+        if deleted {
+            Ok(PrivateItemsPrivateItemIdDeleteResponse::Status204)
+        } else {
+            Ok(PrivateItemsPrivateItemIdDeleteResponse::Status404)
+        }
     }
 
-    #[doc = " 私物情報取得."]
-    #[doc = ""]
-    #[doc = " PrivateItemsPrivateItemIdGet - GET /private-items/{private-item-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn private_items_private_item_id_get<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn private_items_private_item_id_get(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::PrivateItemsPrivateItemIdGetPathParams,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PrivateItemsPrivateItemIdGetResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PrivateItemsPrivateItemIdGetResponse, ()> {
+        let row = db::private_items::get(&self.db_pool, &path_params.private_item_id)
+            .await
+            .map_err(|_| ())?;
+        match row {
+            Some(row) => Ok(PrivateItemsPrivateItemIdGetResponse::Status200(
+                db::private_items::to_model(row),
+            )),
+            None => Ok(PrivateItemsPrivateItemIdGetResponse::Status404),
+        }
     }
 
-    #[doc = " 私物情報更新."]
-    #[doc = ""]
-    #[doc = " PrivateItemsPrivateItemIdPut - PUT /private-items/{private-item-id}"]
-    #[must_use]
-    #[allow(
-        elided_named_lifetimes,
-        clippy::type_complexity,
-        clippy::type_repetition_in_bounds
-    )]
-    fn private_items_private_item_id_put<'life0, 'async_trait>(
-        &'life0 self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
+    async fn private_items_private_item_id_put(
+        &self,
+        _method: Method,
+        _host: Host,
+        _cookies: CookieJar,
         path_params: models::PrivateItemsPrivateItemIdPutPathParams,
         body: models::PrivateItem,
-    ) -> ::core::pin::Pin<
-        Box<
-            dyn ::core::future::Future<Output = Result<PrivateItemsPrivateItemIdPutResponse, ()>>
-                + ::core::marker::Send
-                + 'async_trait,
-        >,
-    >
-    where
-        'life0: 'async_trait,
-        Self: 'async_trait,
-    {
-        todo!()
+    ) -> Result<PrivateItemsPrivateItemIdPutResponse, ()> {
+        let row = db::private_items::update(
+            &self.db_pool,
+            &path_params.private_item_id,
+            body.name.as_deref().unwrap_or(""),
+            body.owner_id.as_deref(),
+            body.post_grad_treat_id.as_deref(),
+            body.model_number.as_deref(),
+            body.is_remaining.unwrap_or(true),
+            body.remarks.as_deref(),
+        )
+        .await
+        .map_err(|_| ())?;
+
+        match row {
+            Some(row) => Ok(PrivateItemsPrivateItemIdPutResponse::Status200(
+                db::private_items::to_model(row),
+            )),
+            None => Ok(PrivateItemsPrivateItemIdPutResponse::Status404),
+        }
     }
 }
